@@ -148,6 +148,28 @@ RENDERERS = {
 }
 
 
+def render_index():
+    """测试索引页：列出 4 个页面入口（标题自动取自 i18n，保持同步）。"""
+    zh = json.loads((I18N_DIR / "zh.json").read_text(encoding="utf-8"))
+    en = json.loads((I18N_DIR / "en.json").read_text(encoding="utf-8"))
+    entries = [
+        ("remote_control.html",    "%s（中文）" % zh["remote_control"]["page_title"]),
+        ("remote_control_en.html", "%s (English)" % en["remote_control"]["page_title"]),
+        ("file_manager.html",      "%s（中文）" % zh["file_manager"]["page_title"]),
+        ("file_manager_en.html",   "%s (English)" % en["file_manager"]["page_title"]),
+    ]
+    items = "\n".join(
+        '<li><a href="%s">%s</a></li>' % (href, esc(text)) for href, text in entries
+    )
+    return (
+        '<h1 class="page-title">laptop.xiaomi.web</h1>'
+        '<h2 class="main-title">页面索引 / Page Index</h2>'
+        '<ul class="index-list">%s</ul>'
+        '<p class="index-note">开发测试用入口页；正式使用时插件直接跳转到具体页面，'
+        "此页不会被用户看到。</p>" % items
+    )
+
+
 def main():
     if not TEMPLATE_PATH.exists():
         sys.exit("template not found: %s" % TEMPLATE_PATH)
@@ -173,6 +195,15 @@ def main():
         out_path = DIST_DIR / out_name
         out_path.write_text(html, encoding="utf-8")
         print("generated dist/%s" % out_name)
+
+    # 测试索引页：访问站点根路径时的入口
+    index_html = (
+        template.replace("{{LANG}}", "zh-CN")
+        .replace("{{TITLE}}", esc("页面索引 - laptop.xiaomi.web"))
+        .replace("{{BODY}}", render_index())
+    )
+    (DIST_DIR / "index.html").write_text(index_html, encoding="utf-8")
+    print("generated dist/index.html")
 
     # 复制图片到 dist/images/（HTML 使用相对路径引用）
     if not ASSETS_DIR.exists():

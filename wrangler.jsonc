@@ -5,7 +5,9 @@
   "compatibility_date": "2026-09-20",
   "assets": {
     "directory": "./dist",
-    // 严格 .html 模式：*.html 直接响应不重定向，无扩展名地址返回 404
-    "html_handling": "none"
+    // 严格 .html 模式：*.html 直接响应不重定向
+    "html_handling": "none",
+    // 未匹配路径（含根路径 /）回退到 index.html 测试索引页
+    "not_found_handling": "single-page-application"
   }
 }

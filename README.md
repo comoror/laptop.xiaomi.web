@@ -32,6 +32,7 @@ dist/remote_control.html        远程控制 · 中文
 dist/remote_control_en.html     远程控制 · English
 dist/file_manager.html          文件管理 · 中文
 dist/file_manager_en.html       文件管理 · English
+dist/index.html                 测试索引页（站点根入口，自动列出以上4页）
 ```
 
 ## 文案里怎么写链接
@@ -63,6 +64,17 @@ Cloudflare 新版控制台将 Git 部署引导到 Workers（表单标题"设置�
 
 若控制台仍是经典 Pages 流程：Framework preset 选 None，
 Build command `python3 build.py`，Build output directory 填 `dist`，效果相同。
+
+### 线上 URL 行为（由 wrangler.jsonc 决定）
+
+| 访问地址 | 结果 |
+|---|---|
+| `https://<域名>/` | 200 · 测试索引页（列出 4 个页面入口，点击即达） |
+| `https://<域名>/remote_control.html` | 200 · 直接打开该页（无重定向） |
+| `https://<域名>/任意未匹配路径`（含无扩展名形式） | 200 · 回退到测试索引页 |
+
+配置：`html_handling: "none"`（.html 为唯一规范地址，不重定向）
++ `not_found_handling: "single-page-application"`（未匹配路径与根路径回退到 index.html）。
 
 ## 与插件 RN 版的差异记录
 
