@@ -1,0 +1,9 @@
+{
+  // Cloudflare Workers 静态资源配置
+  // 构建命令 python3 build.py 生成 dist/，wrangler deploy 将其作为静态站点发布
+  "name": "laptop-xiaomi-web",
+  "compatibility_date": "2026-09-20",
+  "assets": {
+    "directory": "./dist"
+  }
+}

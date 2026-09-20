@@ -46,18 +46,23 @@ dist/file_manager_en.html       文件管理 · English
 
 英文页的链接目标要带 `_en` 后缀（如 `remote_control_en.html`），中英页面互不串门。
 
-## Cloudflare Pages 配置
+## Cloudflare 部署配置（Workers 新版流程）
 
-在 Cloudflare 控制台 → Workers & Pages → 连接 GitHub 仓库后：
+Cloudflare 新版控制台将 Git 部署引导到 Workers（表单标题"设置您的应用程序"），
+静态目录由仓库根部的 `wrangler.jsonc` 指定（`assets.directory = ./dist`）。
+连接 GitHub 仓库后，表单填写：
 
 | 配置项 | 值 |
 |---|---|
-| Framework preset | None |
-| Build command | `python3 build.py` |
-| Build output directory | `dist` |
+| 项目名称 | `laptop-xiaomi-web`（需与 wrangler.jsonc 中 name 一致） |
+| 构建命令 | `python3 build.py` |
+| 部署命令 | `npx wrangler deploy`（保持默认） |
 
-- `main` 分支 push → 自动部署到生产（在 Custom domains 里绑定你自己的域名）
+- `main` 分支 push → 自动部署到生产（在项目的 Custom domains / Domains 里绑定你自己的域名）
 - 其他分支 push → 自动生成独立预览地址，验收后再合并到 `main`
+
+若控制台仍是经典 Pages 流程：Framework preset 选 None，
+Build command `python3 build.py`，Build output directory 填 `dist`，效果相同。
 
 ## 与插件 RN 版的差异记录
 
