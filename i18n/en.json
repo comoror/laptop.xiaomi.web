@@ -1,0 +1,128 @@
+{
+  "remote_control": {
+    "html_title": "Controlling Your Laptop - Xiaomi Laptop Guide",
+    "page_title": "Controlling Your Laptop",
+    "main_title": "What laptop functions can I control from my tablet?",
+    "features": [
+      {
+        "title": "Function 1: Power your laptop on/off and enter sleep mode.",
+        "figures": [
+          {"img": "remote_ctrl1.png", "caption": "Fig. Available functions"}
+        ]
+      },
+      {
+        "title": "Function 2: Directly access your laptop using the Remote Desktop feature.",
+        "figures": [
+          {"img": "remote_ctrl2.png", "caption": "Fig. 1: Open the Remote Control app on your tablet"},
+          {"img": "remote_ctrl3.png", "caption": "Fig. 2: Make sure the Remote Control app is updated to version 5.5 or later"},
+          {"img": "remote_ctrl4.png", "caption": "Fig. 3: Open the Remote Control app for your laptop"}
+        ]
+      },
+      {
+        "title": "Function 3: [[Manage laptop files on your phone or tablet|file_manager_en.html]]."
+      }
+    ],
+    "faq": {
+      "title": "FAQs",
+      "items": [
+        {
+          "question": "Why is my laptop offline?",
+          "answers": [
+            {"level": "bullet", "text": "Make sure that you are logged in to the same Xiaomi account on your laptop and tablet."},
+            {"level": "bullet", "text": "Make sure you have added your laptop to Mi Home. Reference method:"},
+            {
+              "level": "letter",
+              "text": "a. Open Remote Control on your laptop and log in to your Xiaomi account.",
+              "figures": [
+                {"img": "remote_ctrl7.png", "caption": "Fig. 1: Log in to your Xiaomi account in Remote Control"}
+              ]
+            },
+            {
+              "level": "letter",
+              "text": "b. Change the laptop to a status that allows pairing.",
+              "figures": [
+                {"img": "remote_ctrl8.png", "caption": "Fig. 1: In the Remote Control app on your laptop, click Settings - Xiaomi IoT Module Manager - Add to Mi Home and change the laptop to a status that allows pairing"}
+              ]
+            },
+            {"level": "letter", "text": "c. Pair with your laptop using the Mi Home app on your phone."},
+            {
+              "level": "roman",
+              "text": "i. Find your laptop.",
+              "figures": [
+                {"img": "remote_ctrl9.png", "caption": "Fig. 1: Mi Home automatically shows a pop-up when it discovers a nearby device"},
+                {"img": "remote_ctrl10.png", "caption": "Fig. 2: Tap \"+\" in the upper right corner of the Mi Home app to add a device"},
+                {"img": "remote_ctrl11.png", "caption": "Fig. 3: Scan for nearby devices"},
+                {"img": "remote_ctrl12.png", "caption": "Fig. 4: Or, manually add the device by selecting \"Work and study - Laptop\""}
+              ]
+            },
+            {
+              "level": "roman",
+              "text": "ii. Start the pairing process.",
+              "figures": [
+                {"img": "remote_ctrl13.png", "caption": "Fig. 1: Click the laptop icon to start the pairing process"}
+              ]
+            },
+            {
+              "level": "bullet",
+              "text": "Check that the laptop's Xiaomi IoT Module is connected to the Internet.",
+              "figures": [
+                {"img": "remote_ctrl5.png", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"},
+                {"img": "remote_ctrl6.png", "caption": "Fig. 2: Select \"Module network\" to manually add the network"}
+              ]
+            }
+          ]
+        },
+        {
+          "question": "Why can't I make my laptop power on, power off, or sleep?",
+          "answers": [
+            {"level": "bullet", "text": "Similar to the issue above, make sure that your tablet and laptop are logged in to the same Xiaomi account, the laptop has been added to Mi Home, and the Xiaomi IoT Module is connected to the Internet."}
+          ]
+        }
+      ]
+    }
+  },
+  "file_manager": {
+    "html_title": "Managing Laptop Files - Xiaomi Laptop Guide",
+    "page_title": "Managing Laptop Files",
+    "main_title": "Can I manage laptop files from my phone or tablet?",
+    "requirement": "Yes. You will need to update your Xiaomi or Redmi phone or tablet to Xiaomi HyperOS 2 or later. [[HyperOS website|https://hyperos.mi.com/]]",
+    "section_title": "How do I manage laptop files on my phone or tablet?",
+    "steps": [
+      {
+        "id": "step1",
+        "title": "1. Log in to your Xiaomi account and open File Services.",
+        "figures": [
+          {"img": "file_mgr1.png", "caption": "Fig. 1: Log in to your Xiaomi account on your phone or tablet"},
+          {"img": "file_mgr2.png", "caption": "Fig. 2: Log in to the same Xiaomi account on your laptop"},
+          {"img": "file_mgr3.png", "caption": "Fig. 3: On your laptop, go to PC Manager - Settings - File Services"}
+        ]
+      },
+      {
+        "id": "step2",
+        "title": "2. Open the laptop portal in the File Manager app.",
+        "figures": [
+          {"img": "file_mgr4.png", "caption": "Fig. 1: File Manager app on phone and tablet"},
+          {"img": "file_mgr5.png", "caption": "Fig. 2: Laptop entry"}
+        ]
+      },
+      {
+        "id": "step3",
+        "title": "3. You can manage your laptop files just like on your phone or tablet."
+      }
+    ],
+    "faq": {
+      "title": "FAQs",
+      "items": [
+        {
+          "question": "Why can't I see my laptop on my phone or tablet?",
+          "answers": [
+            {"level": "check", "text": "Check the settings below and try again:"},
+            {"level": "sub", "text": "Make sure that the laptop is powered on and connected to the Internet. You can [[power on your laptop remotely|remote_control_en.html]]."},
+            {"level": "sub", "text": "Make sure that your phone, tablet and laptop are all logged in to the same [[Xiaomi account|#step1]]."},
+            {"level": "sub", "text": "Check that Xiaomi PC Manager on your laptop has been updated to version 5.8 or later, then [[open File Services|#step1]]."}
+          ]
+        }
+      ]
+    }
+  }
+}

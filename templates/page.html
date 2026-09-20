@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>{{TITLE}}</title>
+<style>
+/* ========== 主题变量：亮色 / 深色（跟随手机系统） ========== */
+:root {
+  --bg: #ffffff;
+  --title: #333333;
+  --body: rgba(0, 0, 0, 0.5);
+  --caption: #999999;
+  --req: #666666;
+  --img-bg: #f5f5f5;
+  --divider: rgba(0, 0, 0, 0.15);
+  --link: #32CD32;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #252b2e;
+    --title: #ffffff;
+    --body: rgba(255, 255, 255, 0.6);
+    --caption: #9e9e9e;
+    --req: #b3b3b3;
+    --img-bg: #1e2427;
+    --divider: rgba(255, 255, 255, 0.15);
+    --link: #32CD32;
+  }
+}
+
+/* ========== 基础样式（对应插件 RN 版样式） ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--title);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.4;
+}
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 25px 40px;
+}
+
+/* 标题 */
+.page-title   { font-size: 32px; font-weight: 400; margin-bottom: 50px; }
+.main-title   { font-size: 20px; font-weight: 500; line-height: 26px; margin-bottom: 20px; }
+.section-title{ font-size: 20px; font-weight: 500; line-height: 24px; margin: 20px 0; }
+
+/* 功能区 / 步骤区 */
+.feature-title{ font-size: 15px; line-height: 22px; margin: 15px 0; }
+.step         { margin-bottom: 30px; }
+.step-title   { font-size: 16px; line-height: 22px; margin-bottom: 15px; }
+
+/* 图片与图注 */
+figure img {
+  display: block;
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  background: var(--img-bg);
+  border-radius: 12px;
+}
+figure { margin-bottom: 12px; }
+figcaption {
+  font-size: 13px;
+  color: var(--caption);
+  text-align: center;
+  margin: 5px 0;
+}
+
+/* 分割线 / 要求说明 */
+.divider    { border: none; height: 1px; background: var(--divider); margin: 30px 0; }
+.requirement{ font-size: 14px; color: var(--req); line-height: 22px; margin: 30px 0; }
+
+/* 常见问题 */
+.faq-title { font-size: 18px; font-weight: 500; margin-bottom: 20px; }
+.faq-item  { margin-top: 20px; }
+.faq-q     { font-size: 15px; line-height: 22px; margin-bottom: 12px; }
+.a-item    { display: flex; font-size: 14px; line-height: 20px; color: var(--body); margin-bottom: 8px; }
+.a-item .mark { flex: none; margin-right: 8px; width: 14px; }
+.a-text    { flex: 1; min-width: 0; }
+/* 层级：bullet=•, check=∘, sub=次级•, letter=a./b./c., roman=i./ii. */
+.lvl-bullet, .lvl-check { padding-left: 10px; }
+.lvl-letter { padding-left: 15px; font-weight: 500; }
+.lvl-roman  { padding-left: 20px; font-weight: 500; }
+.lvl-sub    { padding-left: 20px; }
+
+/* 链接（页内锚点 / 页面互跳 / 外链） */
+a { color: var(--link); text-decoration: underline; }
+a:active { opacity: 0.6; }
+</style>
+</head>
+<body>
+<main class="page">
+{{BODY}}
+</main>
+</body>
+</html>
