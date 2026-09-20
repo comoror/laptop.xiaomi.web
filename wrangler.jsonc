@@ -4,6 +4,8 @@
   "name": "laptop-xiaomi-web",
   "compatibility_date": "2026-09-20",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // 严格 .html 模式：*.html 直接响应不重定向，无扩展名地址返回 404
+    "html_handling": "none"
   }
 }
