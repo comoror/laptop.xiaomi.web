@@ -15,7 +15,7 @@
         "title": "功能2：对于使用HyperOS3的平板，使用远程控制直接访问笔记本电脑。",
         "figures": [
           {"img": "remote_ctrl3.webp", "caption": "图一：平板打开\"远程控制\"APP"},
-          {"img": "remote_ctrl4.webp", "caption": "图二：\"远程控制\"升级至V1.0.1及以上版本"},
+          {"img": "remote_ctrl4.webp", "caption": "图二：\"远程控制\"升级至5.5及以上版本"},
           {"img": "remote_ctrl5.webp", "caption": "图三：打开笔记本远程桌面APP"}
         ]
       },
@@ -51,7 +51,7 @@
               "level": "letter",
               "text": "b.让笔记本处于可被绑定状态",
               "figures": [
-                {"img": "remote_ctrl10.webp", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加设备\"，让笔记本处于可被绑定状态"}
+                {"img": "remote_ctrl10.webp", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加到米家\"，让笔记本处于可被绑定状态"}
               ]
             },
             {"level": "letter", "text": "c.在移动端米家APP绑定笔记本"},
@@ -77,7 +77,7 @@
               "level": "letter",
               "text": "a.在电脑管家-工具-小米网络模组，点击\"添加设备\"",
               "figures": [
-                {"img": "remote_ctrl16.webp", "caption": "图一：在远程控制登录小米账号"}
+                {"img": "remote_ctrl16.webp", "caption": "在电脑管家-工具-小米网络模组，点击\"添加设备\""}
               ]
             },
             {
@@ -100,7 +100,7 @@
               "level": "letter",
               "text": "b.如果您安装的是电脑管家6.x",
               "figures": [
-                {"img": "remote_ctrl21.webp", "caption": "图一：打开远程控制-设置-小米网络模组管理"}
+                {"img": "remote_ctrl21.webp", "caption": "在电脑管家-工具-小米网络模组，查看模组状态"}
               ]
             }
           ]
@@ -119,7 +119,7 @@
     "html_title": "管理笔记本文件 - 小米笔记本使用指南",
     "page_title": "管理笔记本文件",
     "main_title": "我的手机和平板可以管理笔记本文件吗？",
-    "requirement": "需要您的小米、REDMI手机或平板升级到HyperOS2及以上版本。[[HyperOS官网|https://hyperos.mi.com/]]",
+    "requirement": "需要您的小米、REDMI手机或平板升级到小米HyperOS3.1及以上版本。[[HyperOS官网|https://hyperos.mi.com/]]",
     "section_title": "如何用手机和平板管理笔记本文件？",
     "steps": [
       {
@@ -154,9 +154,10 @@
         {
           "question": "在手机、平板找不到笔记本怎么办？",
           "answers": [
-            {"level": "bullet", "text": "确保笔记本处于开机状态，并且网络正常，您可以[[远程控制笔记本开机|remote_control.html]]"},
-            {"level": "bullet", "text": "确保手机、平板和笔记本登录的是同一个小米账号"},
-            {"level": "bullet", "text": "确认笔记本的\"小米电脑管家\"升级至5.8及以上版本，并[[打开文件服务|#step1]]"}
+            {"level": "bullet", "text": "请检查以下设定，并再次尝试："},
+            {"level": "sub", "text": "确保笔记本处于开机状态，并且网络正常，您可以[[远程控制笔记本开机|remote_control.html]]"},
+            {"level": "sub", "text": "确保手机、平板和笔记本登录的是同一个[[小米账号|#step1]]"},
+            {"level": "sub", "text": "确认笔记本的\"小米电脑管家\"升级至5.8及以上版本，并[[打开文件服务|#step1]]"}
           ]
         }
       ]
@@ -213,7 +214,7 @@
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play3.webp", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加设备\"，让笔记本处于可被绑定状态"}
+          {"img": "smart_play3.webp", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加到米家\"，让笔记本处于可被绑定状态"}
         ]
       },
       {"type": "main_title", "text": "我的手机和平板可以管理笔记本文件吗？", "break": true},

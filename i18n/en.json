@@ -15,7 +15,7 @@
         "title": "Function 2: For tablets running HyperOS3, use Remote Control to access your laptop directly.",
         "figures": [
           {"img": "remote_ctrl3.webp", "caption": "Fig. 1: Open the Remote Control app on your tablet"},
-          {"img": "remote_ctrl4.webp", "caption": "Fig. 2: Update the Remote Control app to version 1.0.1 or later"},
+          {"img": "remote_ctrl4.webp", "caption": "Fig. 2: Update the Remote Control app to version 5.5 or later"},
           {"img": "remote_ctrl5.webp", "caption": "Fig. 3: Open the Remote Desktop app on your laptop"}
         ]
       },
@@ -51,7 +51,7 @@
               "level": "letter",
               "text": "b. Change the laptop to a status that allows pairing",
               "figures": [
-                {"img": "remote_ctrl10.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add device\" and change the laptop to a status that allows pairing"}
+                {"img": "remote_ctrl10.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add to Mi Home\" and change the laptop to a status that allows pairing"}
               ]
             },
             {"level": "letter", "text": "c. Pair with your laptop using the Mi Home app on your phone"},
@@ -77,7 +77,7 @@
               "level": "letter",
               "text": "a. In PC Manager, go to Tools - Xiaomi IoT Module, and click \"Add device\"",
               "figures": [
-                {"img": "remote_ctrl16.webp", "caption": "Fig. 1: Log in to your Xiaomi account in Remote Control"}
+                {"img": "remote_ctrl16.webp", "caption": "In PC Manager, go to Tools - Xiaomi IoT Module, and click \"Add device\""}
               ]
             },
             {
@@ -100,7 +100,7 @@
               "level": "letter",
               "text": "b. If you are using PC Manager 6.x",
               "figures": [
-                {"img": "remote_ctrl21.webp", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"}
+                {"img": "remote_ctrl21.webp", "caption": "In PC Manager, go to Tools - Xiaomi IoT Module to check the module status"}
               ]
             }
           ]
@@ -119,7 +119,7 @@
     "html_title": "Managing Laptop Files - Xiaomi Laptop Guide",
     "page_title": "Managing Laptop Files",
     "main_title": "Can I manage laptop files from my phone or tablet?",
-    "requirement": "You will need to update your Xiaomi or REDMI phone or tablet to HyperOS2 or later. [[HyperOS website|https://hyperos.mi.com/]]",
+    "requirement": "You will need to update your Xiaomi or REDMI phone or tablet to Xiaomi HyperOS 3.1 or later. [[HyperOS website|https://hyperos.mi.com/]]",
     "section_title": "How do I manage laptop files on my phone or tablet?",
     "steps": [
       {
@@ -154,9 +154,10 @@
         {
           "question": "Why can't I see my laptop on my phone or tablet?",
           "answers": [
-            {"level": "bullet", "text": "Make sure that the laptop is powered on and connected to the Internet. You can [[power on your laptop remotely|remote_control_en.html]]"},
-            {"level": "bullet", "text": "Make sure that your phone, tablet and laptop are all logged in to the same Xiaomi account"},
-            {"level": "bullet", "text": "Check that Xiaomi PC Manager on your laptop has been updated to version 5.8 or later, then [[open File Services|#step1]]"}
+            {"level": "bullet", "text": "Check the following settings and try again:"},
+            {"level": "sub", "text": "Make sure that the laptop is powered on and connected to the Internet. You can [[power on your laptop remotely|remote_control_en.html]]"},
+            {"level": "sub", "text": "Make sure that your phone, tablet and laptop are all logged in to the same [[Xiaomi account|#step1]]"},
+            {"level": "sub", "text": "Check that Xiaomi PC Manager on your laptop has been updated to version 5.8 or later, then [[open File Services|#step1]]"}
           ]
         }
       ]
@@ -213,7 +214,7 @@
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play3.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add device\" and change the laptop to a status that allows pairing"}
+          {"img": "smart_play3.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add to Mi Home\" and change the laptop to a status that allows pairing"}
         ]
       },
       {"type": "main_title", "text": "Can I manage laptop files from my phone or tablet?", "break": true},
