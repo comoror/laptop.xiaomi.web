@@ -71,15 +71,48 @@ def fmt(text):
     return HL_RE.sub(lambda m: '<span class="hl">%s</span>' % m.group(1), escaped)
 
 
+def webp_size(path):
+    """读取 WebP 尺寸（纯标准库；用于给 <img> 写 width/height，避免图片加载时页面跳动）。
+
+    解析不了就返回 None，不影响生成。
+    """
+    try:
+        with open(path, "rb") as fh:
+            data = fh.read(32)
+    except OSError:
+        return None
+    if len(data) < 30 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+        return None
+    chunk = data[12:16]
+    if chunk == b"VP8X":                     # 带 alpha 的扩展格式（本项目用的这种）
+        w = int.from_bytes(data[24:27], "little") + 1
+        h = int.from_bytes(data[27:30], "little") + 1
+        return w, h
+    if chunk == b"VP8 ":                     # 有损
+        w = int.from_bytes(data[26:28], "little") & 0x3FFF
+        h = int.from_bytes(data[28:30], "little") & 0x3FFF
+        return w, h
+    if chunk == b"VP8L":                     # 无损
+        bits = int.from_bytes(data[21:25], "little")
+        return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    return None
+
+
 def render_figures(figures):
-    """图片列表 → <figure> 片段（图注渲染在卡片内部，见模板 CSS）。"""
+    """图片列表 → <figure> 片段（图注渲染在卡片内部，见模板 CSS）。
+
+    不写 loading="lazy"：图片已经是 WebP（全站 840KB），直接加载更稳，
+    部分手机自带浏览器的懒加载实现会把图一直挂着不加载。
+    """
     out = []
     for fig in figures or []:
         caption = fig.get("caption", "")
+        size = webp_size(ASSETS_DIR / fig["img"])
+        dims = ' width="%d" height="%d"' % size if size else ""
         out.append(
-            '<figure><img src="images/%s" alt="%s" loading="lazy">'
+            '<figure><img src="images/%s" alt="%s"%s decoding="async">'
             "<figcaption>%s</figcaption></figure>"
-            % (fig["img"], esc(caption), esc(caption))
+            % (fig["img"], esc(caption), dims, esc(caption))
         )
     return "\n".join(out)
 
@@ -296,6 +329,16 @@ def main():
         shutil.rmtree(font_out)
     shutil.copytree(FONTS_DIR, font_out)
     print("copied %d font files -> dist/fonts/" % len(list(font_out.iterdir())))
+
+    # 静态资源缓存头（Cloudflare 支持 dist/_headers）。
+    # HTML 保持默认的 must-revalidate（改文案立刻生效），图片/字体缓存一天，
+    # 省掉手机端每次进页面都要重新校验 36 张图的往返。
+    (DIST_DIR / "_headers").write_text(
+        "/images/*\n  Cache-Control: public, max-age=86400\n\n"
+        "/fonts/*\n  Cache-Control: public, max-age=86400\n",
+        encoding="utf-8",
+    )
+    print("generated dist/_headers")
     print("done.")
 
 
