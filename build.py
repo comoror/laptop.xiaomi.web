@@ -22,7 +22,6 @@ ROOT = Path(__file__).resolve().parent
 I18N_DIR = ROOT / "i18n"
 TEMPLATE_PATH = ROOT / "templates" / "page.html"
 ASSETS_DIR = ROOT / "assets" / "images"
-FONTS_DIR = ROOT / "assets" / "fonts"
 DIST_DIR = ROOT / "dist"
 
 # (i18n 中的页面 key, 语言, 输出文件名)
@@ -340,15 +339,6 @@ def main():
     shutil.copytree(ASSETS_DIR, img_out)
     print("copied %d images -> dist/images/" % len(list(img_out.iterdir())))
 
-    # 复制 MiSans 字体子集到 dist/fonts/（页面 head 里 link 引用）
-    if not FONTS_DIR.exists():
-        sys.exit("fonts not found: %s" % FONTS_DIR)
-    font_out = DIST_DIR / "fonts"
-    if font_out.exists():
-        shutil.rmtree(font_out)
-    shutil.copytree(FONTS_DIR, font_out)
-    print("copied %d font files -> dist/fonts/" % len(list(font_out.iterdir())))
-
     # 站点图标：没有它浏览器会去请求 /favicon.ico，而 SPA 回退会返回整页 HTML（白白多一次请求）
     for name in ("favicon.ico", "favicon.svg", "favicon.png"):
         src = ASSETS_DIR.parent / name
@@ -357,11 +347,10 @@ def main():
     print("copied favicon.ico / favicon.svg / favicon.png -> dist/")
 
     # 静态资源缓存头（Cloudflare 支持 dist/_headers）。
-    # HTML 保持默认的 must-revalidate（改文案立刻生效），图片/字体缓存一天，
-    # 省掉手机端每次进页面都要重新校验 36 张图的往返。
+    # HTML 保持默认的 must-revalidate（改文案立刻生效），图片缓存一天。
+    # 页面不再下载字体文件，所以没有 /fonts/* 规则。
     (DIST_DIR / "_headers").write_text(
-        "/images/*\n  Cache-Control: public, max-age=86400\n\n"
-        "/fonts/*\n  Cache-Control: public, max-age=86400\n",
+        "/images/*\n  Cache-Control: public, max-age=86400\n",
         encoding="utf-8",
     )
     print("generated dist/_headers")

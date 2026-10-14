@@ -22,34 +22,35 @@ build.py              生成脚本（纯 Python 标准库，无第三方依赖�
 dist/                 生成结果，不入库；部署上传的就是这个目录
 ```
 
-## 字体：MiSans（小米官方字体）
+## 字体：只用系统字体，不下载任何字体文件
 
-页面不依赖系统字体，字体随页面上线，所有设备看到的字形都与设计稿一致：
+页面**不加载 webfont**。`font-family` 第一位是 `"MiSans"`：
 
-- `assets/fonts/` 里是 **MiSans 精简子集**：`misans-regular.woff2`（57KB，正文全部用字）
-  \+ `misans-medium.woff2`（**9KB**，只含 500 字重标题用到的 69 字）+ 0.5KB 的 `misans.css`。
-  **每字重只发 1 个请求，合计约 67KB。**
-- Medium 之所以能这么小：模板里只有 `.main-title` / `.section-title` / `.faq-title` 是
-  `font-weight:500`，其余（页面大标题、功能标题、步骤标题、正文、清单、FAQ 问答）都是 400，
-  脚本按这两类文案分别裁剪。给 500 字重的元素加新文案后重跑脚本即可自动纳入。
-- `font-display:fallback`：最多 ~100ms 阻塞，字体 3 秒内到达才切换，超时保持系统字体，
-  避免慢网络下"整篇换字形"闪一下。
-- 为什么不是官方那套分片：官方分片是 32 个文件，PC 端（没装 MiSans）每个分片一个来回，
-  实测单页 16 个字体请求、每个 1~1.9 秒，整页拖到 7.2 秒。合并后字体请求 16 → 2。
-- 生成方式 `python tools/build_font.py`：先按页面用到的字符裁剪分片，再把 **CFF 轮廓转成 glyf**
-  后合并——MiSans 分片是 CID-keyed CFF，fontTools 不支持直接合并，必须先转换
-  （cu2qu，误差 1/1000 em，实测字形、断行与设计稿一致）。
-- 模板 `<head>` 里 link 字体 CSS，`font-family` 第一位是 `"MiSans"`，后面才是
-  `-apple-system / PingFang SC / Microsoft YaHei` 等系统字体兜底；
-  `src` 带 `local('MiSans')`，小米设备已内置 MiSans，不会再下载。
-- **改了文案、加了新字要重跑**：`python tools/build_font.py`
-  （需要 `pip install fonttools brotli`；脚本会列出涉及的分片和 MiSans 未覆盖的字符）。
-  不重跑也不会报错，只是新字会回退到系统字体。
-- 已知：MiSans SC 的分片里没有 `？`（U+FF1F）和 `∘`（U+2218），这两个字符由系统字体兜底，
-  实测与设计稿观感一致。
-- 授权：MiSans 为小米官方免费商用字体，`assets/fonts/MiSans-LICENSE.txt` 为随包授权文件。
-- 站点图标：`assets/favicon.svg` / `favicon.ico` / `favicon.png`（临时图标，可直接替换）。
-  没有它浏览器会去请求 `/favicon.ico`，而 SPA 回退会返回整页 HTML，白耗一次请求。
+- **小米 / HyperOS 设备**：系统自带 MiSans，直接命中，字形与设计稿一致；
+- **其它设备**：依次落到苹方（iOS）、HarmonyOS Sans（华为）、微软雅黑（Windows）、
+  系统默认无衬线（Android 等）。
+
+为什么可以这么干：**中日韩字体每个汉字、全角标点都是固定 1em 宽**，所以换字体
+**不影响断行、居中、卡片尺寸、页面总高度**。实测同一页在「MiSans」与「系统字体（微软雅黑）」
+下渲染对比：文本块数量 28 vs 28，每块起始位置偏差 ≤ 6px（整页 15200px）。
+
+代价只是"字形长相"不同：
+
+| 平台 | 回退字体 | 差异 |
+|---|---|---|
+| 小米 / HyperOS | 系统即 MiSans | 无 |
+| iPhone / iPad | 苹方 PingFang SC | 字形略不同；苹方有 Medium，标题字重正常 |
+| Windows | 微软雅黑 | 字形不同；雅黑只有 400/700，`font-weight:500` 会落到 400（标题略轻，不会假加粗） |
+| 其他 Android | Roboto + Noto Sans CJK | 字形不同，断行一致 |
+
+**历史与备用方案**：曾经自托管 MiSans 子集（`tools/build_font.py` 从官方分片裁剪 + 合并，
+输出 2 个 woff2 共 67KB），为了彻底去掉字体网络请求已移除。需要恢复时：
+跑一次 `python tools/build_font.py`（需 `pip install fonttools brotli`），
+在模板 `<head>` 加回 `<link rel="stylesheet" href="fonts/misans.css">`，
+并在 `build.py` 里加回 `assets/fonts/` → `dist/fonts/` 的拷贝。
+
+站点图标：`assets/favicon.svg` / `favicon.ico` / `favicon.png`（临时图标，可直接替换）。
+没有它浏览器会去请求 `/favicon.ico`，而 SPA 回退会返回整页 HTML，白耗一次请求。
 
 ## 日常工作流
 
