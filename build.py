@@ -37,6 +37,16 @@ PAGES = [
 
 LANG_ATTR = {"zh": "zh-CN", "en": "en"}
 
+# 前几张图片直接加载，其余懒加载（见 render_figures 说明）
+EAGER_FIGURES = 2
+_fig_index = 0
+
+
+def reset_figures():
+    """每个页面开始渲染前重置图片序号（决定哪几张不懒加载）。"""
+    global _fig_index
+    _fig_index = 0
+
 # FAQ 条目层级 → (标记字符, CSS 类)；letter/roman 的序号写在文案里
 LEVELS = {
     "bullet": ("•", "lvl-bullet"),
@@ -104,19 +114,23 @@ def render_figures(figures):
     图片包一层 <a class="zoom" href="图片地址">：
     - 有 JS 时点一下进页内灯箱（再点一下回到原页面，双指可缩放）
     - 没 JS / JS 被拦时退回浏览器默认行为，直接打开原图
-    不写 loading="lazy"：图片已经是 WebP（全站 840KB），直接加载更稳，
-    部分手机自带浏览器的懒加载实现会把图一直挂着不加载。
+
+    懒加载策略：前 EAGER_FIGURES 张直接加载（保证首屏一定有图），其余 loading="lazy"。
+    全站图片虽有 840KB，但 remote_control 一页就 416KB，全部预加载会让手机端首屏明显变慢。
     """
+    global _fig_index
     out = []
     for fig in figures or []:
         caption = fig.get("caption", "")
         size = webp_size(ASSETS_DIR / fig["img"])
         dims = ' width="%d" height="%d"' % size if size else ""
+        lazy = "" if _fig_index < EAGER_FIGURES else ' loading="lazy"'
+        _fig_index += 1
         out.append(
             '<figure><a class="zoom" href="images/%s" aria-label="%s">'
-            '<img src="images/%s" alt="%s"%s decoding="async"></a>'
+            '<img src="images/%s" alt="%s"%s decoding="async"%s></a>'
             "<figcaption>%s</figcaption></figure>"
-            % (fig["img"], esc(caption), fig["img"], esc(caption), dims, esc(caption))
+            % (fig["img"], esc(caption), fig["img"], esc(caption), dims, lazy, esc(caption))
         )
     return "\n".join(out)
 
@@ -297,6 +311,7 @@ def main():
             sys.exit('missing key "%s" in %s' % (page_key, data_path.name))
 
         page_data = lang_data[page_key]
+        reset_figures()
         body = RENDERERS[page_key](page_data)
         html = (
             template.replace("{{LANG}}", LANG_ATTR[lang])
