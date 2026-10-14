@@ -243,7 +243,7 @@ def main():
         total += size
         print("%s：合并后 %d 个字，%d KB" % (weight, glyphs, size // 1024))
         css.append(
-            "@font-face{font-family:MiSans;font-style:normal;font-weight:%d;font-display:swap;"
+            "@font-face{font-family:MiSans;font-style:normal;font-weight:%d;font-display:fallback;"
             "src:local('MiSans'),url('%s') format('woff2');}" % (css_weight, out_name)
         )
     open(os.path.join(FONTS_DIR, "misans.css"), "w", encoding="utf-8").write("\n".join(css) + "\n")
