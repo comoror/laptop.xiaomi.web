@@ -15,7 +15,7 @@
 templates/page.html   页面模板（骨架 + 全部 CSS，文案位置由脚本注入）
 i18n/zh.json          全部中文文案（两个页面都在这一个文件里）
 i18n/en.json          全部英文文案
-assets/images/        页面用到的 PNG 截图（复制自插件 resources/images/static/）
+assets/images/        页面用到的截图（WebP，带 alpha；源自设计稿导出的 1020px PNG）
 assets/fonts/         MiSans 网页字体子集 + misans.css（由 tools/build_font.py 生成）
 tools/build_font.py   字体子集生成脚本（可选，改文案加了新字才需要跑）
 build.py              生成脚本（纯 Python 标准库，无第三方依赖）
@@ -77,9 +77,13 @@ dist/index.html                 测试索引页（站点根入口，自动列出
   答案的 `level` 取 `bullet` / `check` / `sub` / `letter` / `roman` / `note`（`note` 为无标记说明行），
   条目后可跟 `figures[]`；`letter`、`roman` 的序号（`a.` / `i.`）写在文案里。
 
-图片放在 `assets/images/`，JSON 里只写文件名（HTML 输出成 `images/xxx.png`）。
-截图用原始 1020px 宽（卡片为 680 CSS px，即 1.5 倍图）；以后拿到更高清的原图，
-同名替换即可，不用改文案。
+图片放在 `assets/images/`，JSON 里只写文件名（HTML 输出成 `images/xxx.webp`）。
+
+- 格式为 **WebP（quality 85，保留 alpha）**：截图的四边是透明的，要透出卡片的灰底，
+  所以不能拍平到白底。36 张共约 840KB；同内容 PNG 是 6.7MB，手机网络下会明显拖慢
+  甚至加载失败，这是换 WebP 的原因。
+- 尺寸 1020px 宽（卡片 680 CSS px 的 1.5 倍图）；拿到更高清的原图，同名覆盖即可，
+  不用改文案（原图素材在仓库外的 `米家插图/`）。
 
 ## 文案里怎么写链接
 

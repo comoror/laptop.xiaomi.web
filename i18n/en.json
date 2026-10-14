@@ -7,24 +7,24 @@
       {
         "title": "Function 1: Power your laptop on and off, and put it to sleep",
         "figures": [
-          {"img": "remote_ctrl1.png", "caption": "Fig. 1: Available functions in the Remote Control app"},
-          {"img": "remote_ctrl2.png", "caption": "Fig. 2: Control your laptop from the Mi Home widget"}
+          {"img": "remote_ctrl1.webp", "caption": "Fig. 1: Available functions in the Remote Control app"},
+          {"img": "remote_ctrl2.webp", "caption": "Fig. 2: Control your laptop from the Mi Home widget"}
         ]
       },
       {
         "title": "Function 2: For tablets running HyperOS3, use Remote Control to access your laptop directly.",
         "figures": [
-          {"img": "remote_ctrl3.png", "caption": "Fig. 1: Open the Remote Control app on your tablet"},
-          {"img": "remote_ctrl4.png", "caption": "Fig. 2: Update the Remote Control app to version 1.0.1 or later"},
-          {"img": "remote_ctrl5.png", "caption": "Fig. 3: Open the Remote Desktop app on your laptop"}
+          {"img": "remote_ctrl3.webp", "caption": "Fig. 1: Open the Remote Control app on your tablet"},
+          {"img": "remote_ctrl4.webp", "caption": "Fig. 2: Update the Remote Control app to version 1.0.1 or later"},
+          {"img": "remote_ctrl5.webp", "caption": "Fig. 3: Open the Remote Desktop app on your laptop"}
         ]
       },
       {
         "title": "Function 3: For tablets running HyperOS4, use Remote Control to access your laptop desktop directly.",
         "figures": [
-          {"img": "remote_ctrl6.png", "caption": "Fig. 1: In Fusion Device Center - device card - \"Remote Control\""},
-          {"img": "remote_ctrl7.png", "caption": "Fig. 2: Update Xiaomi PC Manager on your laptop to version 6.x or later"},
-          {"img": "remote_ctrl8.png", "caption": "Fig. 3: On your laptop, go to PC Manager - Tools - Remote Control - Allow Remote Control"}
+          {"img": "remote_ctrl6.webp", "caption": "Fig. 1: In Fusion Device Center - device card - \"Remote Control\""},
+          {"img": "remote_ctrl7.webp", "caption": "Fig. 2: Update Xiaomi PC Manager on your laptop to version 6.x or later"},
+          {"img": "remote_ctrl8.webp", "caption": "Fig. 3: On your laptop, go to PC Manager - Tools - Remote Control - Allow Remote Control"}
         ]
       },
       {
@@ -44,14 +44,14 @@
               "level": "letter",
               "text": "a. Open Remote Control on your laptop and log in to your Xiaomi account",
               "figures": [
-                {"img": "remote_ctrl9.png", "caption": "Fig. 1: Log in to your Xiaomi account in Remote Control"}
+                {"img": "remote_ctrl9.webp", "caption": "Fig. 1: Log in to your Xiaomi account in Remote Control"}
               ]
             },
             {
               "level": "letter",
               "text": "b. Change the laptop to a status that allows pairing",
               "figures": [
-                {"img": "remote_ctrl10.png", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add device\" and change the laptop to a status that allows pairing"}
+                {"img": "remote_ctrl10.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add device\" and change the laptop to a status that allows pairing"}
               ]
             },
             {"level": "letter", "text": "c. Pair with your laptop using the Mi Home app on your phone"},
@@ -59,17 +59,17 @@
               "level": "roman",
               "text": "i. Find your laptop",
               "figures": [
-                {"img": "remote_ctrl11.png", "caption": "Fig. 1: Mi Home automatically shows a pop-up when it discovers a nearby device"},
-                {"img": "remote_ctrl12.png", "caption": "Fig. 2: Tap \"+\" in the upper right corner of the Mi Home app to add a device"},
-                {"img": "remote_ctrl13.png", "caption": "Fig. 3: Scan for nearby devices"},
-                {"img": "remote_ctrl14.png", "caption": "Fig. 4: Or, manually add the device by selecting \"Work and study - Laptop\""}
+                {"img": "remote_ctrl11.webp", "caption": "Fig. 1: Mi Home automatically shows a pop-up when it discovers a nearby device"},
+                {"img": "remote_ctrl12.webp", "caption": "Fig. 2: Tap \"+\" in the upper right corner of the Mi Home app to add a device"},
+                {"img": "remote_ctrl13.webp", "caption": "Fig. 3: Scan for nearby devices"},
+                {"img": "remote_ctrl14.webp", "caption": "Fig. 4: Or, manually add the device by selecting \"Work and study - Laptop\""}
               ]
             },
             {
               "level": "roman",
               "text": "ii. Start the pairing process",
               "figures": [
-                {"img": "remote_ctrl15.png", "caption": "Fig. 1: Click the laptop icon to start the pairing process"}
+                {"img": "remote_ctrl15.webp", "caption": "Fig. 1: Click the laptop icon to start the pairing process"}
               ]
             },
             {"level": "note", "text": "If you are using PC Manager 6.x"},
@@ -77,30 +77,30 @@
               "level": "letter",
               "text": "a. In PC Manager, go to Tools - Xiaomi IoT Module, and click \"Add device\"",
               "figures": [
-                {"img": "remote_ctrl16.png", "caption": "Fig. 1: Log in to your Xiaomi account in Remote Control"}
+                {"img": "remote_ctrl16.webp", "caption": "Fig. 1: Log in to your Xiaomi account in Remote Control"}
               ]
             },
             {
               "level": "bullet",
               "text": "Check that the laptop's Xiaomi IoT Module is connected to the Internet",
               "figures": [
-                {"img": "remote_ctrl17.png", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"},
-                {"img": "remote_ctrl18.png", "caption": "Fig. 2: Select \"Module network\" to manually add the network"}
+                {"img": "remote_ctrl17.webp", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"},
+                {"img": "remote_ctrl18.webp", "caption": "Fig. 2: Select \"Module network\" to manually add the network"}
               ]
             },
             {
               "level": "letter",
               "text": "a. If you are using PC Manager 5.8.x",
               "figures": [
-                {"img": "remote_ctrl19.png", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"},
-                {"img": "remote_ctrl20.png", "caption": "Fig. 2: Select \"Module network\" to manually add the network"}
+                {"img": "remote_ctrl19.webp", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"},
+                {"img": "remote_ctrl20.webp", "caption": "Fig. 2: Select \"Module network\" to manually add the network"}
               ]
             },
             {
               "level": "letter",
               "text": "b. If you are using PC Manager 6.x",
               "figures": [
-                {"img": "remote_ctrl21.png", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"}
+                {"img": "remote_ctrl21.webp", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"}
               ]
             }
           ]
@@ -127,10 +127,10 @@
         "num": "1",
         "title": "Log in to your Xiaomi account and open File Services",
         "figures": [
-          {"img": "file_mgr1.png", "caption": "Fig. 1: Log in to your Xiaomi account on your phone or tablet"},
-          {"img": "file_mgr2.png", "caption": "Fig. 2: Log in to the same Xiaomi account on your laptop"},
-          {"img": "file_mgr3.png", "caption": "Fig. 3: If your laptop runs PC Manager 5.8.x, go to \"PC Manager - Settings - File Services\""},
-          {"img": "file_mgr4.png", "caption": "Fig. 4: If your laptop runs PC Manager 6.x, go to \"PC Manager - Tools - Device Interconnection - File Services\""}
+          {"img": "file_mgr1.webp", "caption": "Fig. 1: Log in to your Xiaomi account on your phone or tablet"},
+          {"img": "file_mgr2.webp", "caption": "Fig. 2: Log in to the same Xiaomi account on your laptop"},
+          {"img": "file_mgr3.webp", "caption": "Fig. 3: If your laptop runs PC Manager 5.8.x, go to \"PC Manager - Settings - File Services\""},
+          {"img": "file_mgr4.webp", "caption": "Fig. 4: If your laptop runs PC Manager 6.x, go to \"PC Manager - Tools - Device Interconnection - File Services\""}
         ]
       },
       {
@@ -138,8 +138,8 @@
         "num": "2",
         "title": "Open the laptop portal in the File Manager app",
         "figures": [
-          {"img": "file_mgr5.png", "caption": "Fig. 1: File Manager app on your phone or tablet"},
-          {"img": "file_mgr6.png", "caption": "Fig. 2: Laptop entry"}
+          {"img": "file_mgr5.webp", "caption": "Fig. 1: File Manager app on your phone or tablet"},
+          {"img": "file_mgr6.webp", "caption": "Fig. 2: Laptop entry"}
         ]
       },
       {
@@ -198,7 +198,7 @@
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play1.png", "caption": "Fig. 1: Open Xiaomi PC Manager, check for updates, and update to the latest version"}
+          {"img": "smart_play1.webp", "caption": "Fig. 1: Open Xiaomi PC Manager, check for updates, and update to the latest version"}
         ]
       },
       {"type": "step_title", "text": "Step 2: Add your laptop to Mi Home"},
@@ -206,14 +206,14 @@
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play2.png", "caption": "Fig. 1: Log in to your Xiaomi account in PC Manager"}
+          {"img": "smart_play2.webp", "caption": "Fig. 1: Log in to your Xiaomi account in PC Manager"}
         ]
       },
       {"type": "step_text", "text": "2. Change the laptop to a status that allows pairing"},
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play3.png", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add device\" and change the laptop to a status that allows pairing"}
+          {"img": "smart_play3.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add device\" and change the laptop to a status that allows pairing"}
         ]
       },
       {"type": "main_title", "text": "Can I manage laptop files from my phone or tablet?", "break": true},
@@ -225,10 +225,10 @@
         "num": "1",
         "title": "Log in to your Xiaomi account and open File Services",
         "figures": [
-          {"img": "smart_play4.png", "caption": "Fig. 1: Log in to your Xiaomi account on your phone or tablet"},
-          {"img": "smart_play5.png", "caption": "Fig. 2: Log in to the same Xiaomi account on your laptop"},
-          {"img": "smart_play6.png", "caption": "Fig. 3: If your laptop runs PC Manager 5.8.x, go to \"PC Manager - Settings - File Services\""},
-          {"img": "smart_play7.png", "caption": "Fig. 4: If your laptop runs PC Manager 6.x, go to \"PC Manager - Tools - Device Interconnection - File Services\""}
+          {"img": "smart_play4.webp", "caption": "Fig. 1: Log in to your Xiaomi account on your phone or tablet"},
+          {"img": "smart_play5.webp", "caption": "Fig. 2: Log in to the same Xiaomi account on your laptop"},
+          {"img": "smart_play6.webp", "caption": "Fig. 3: If your laptop runs PC Manager 5.8.x, go to \"PC Manager - Settings - File Services\""},
+          {"img": "smart_play7.webp", "caption": "Fig. 4: If your laptop runs PC Manager 6.x, go to \"PC Manager - Tools - Device Interconnection - File Services\""}
         ]
       },
       {
@@ -237,8 +237,8 @@
         "num": "2",
         "title": "Open the laptop portal in the File Manager app",
         "figures": [
-          {"img": "smart_play8.png", "caption": "Fig. 1: File Manager app on your phone or tablet"},
-          {"img": "smart_play9.png", "caption": "Fig. 2: Laptop entry"}
+          {"img": "smart_play8.webp", "caption": "Fig. 1: File Manager app on your phone or tablet"},
+          {"img": "smart_play9.webp", "caption": "Fig. 2: Laptop entry"}
         ]
       },
       {

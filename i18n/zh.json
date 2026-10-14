@@ -7,24 +7,24 @@
       {
         "title": "功能1：控制笔记本电脑开机、关机和睡眠",
         "figures": [
-          {"img": "remote_ctrl1.png", "caption": "图一：在远程控制 APP内，功能示意图"},
-          {"img": "remote_ctrl2.png", "caption": "图二：在米家插件内控制笔记本"}
+          {"img": "remote_ctrl1.webp", "caption": "图一：在远程控制 APP内，功能示意图"},
+          {"img": "remote_ctrl2.webp", "caption": "图二：在米家插件内控制笔记本"}
         ]
       },
       {
         "title": "功能2：对于使用HyperOS3的平板，使用远程控制直接访问笔记本电脑。",
         "figures": [
-          {"img": "remote_ctrl3.png", "caption": "图一：平板打开\"远程控制\"APP"},
-          {"img": "remote_ctrl4.png", "caption": "图二：\"远程控制\"升级至V1.0.1及以上版本"},
-          {"img": "remote_ctrl5.png", "caption": "图三：打开笔记本远程桌面APP"}
+          {"img": "remote_ctrl3.webp", "caption": "图一：平板打开\"远程控制\"APP"},
+          {"img": "remote_ctrl4.webp", "caption": "图二：\"远程控制\"升级至V1.0.1及以上版本"},
+          {"img": "remote_ctrl5.webp", "caption": "图三：打开笔记本远程桌面APP"}
         ]
       },
       {
         "title": "功能3：对于使用HyperOS4的平板，使用远程控制直接访问笔记本电脑桌面。",
         "figures": [
-          {"img": "remote_ctrl6.png", "caption": "图一：在融合设备中心-设备卡片-\"远程控制\""},
-          {"img": "remote_ctrl7.png", "caption": "图二：笔记本\"电脑管家\"升级至6.x及以上版本"},
-          {"img": "remote_ctrl8.png", "caption": "图三：打开笔记本\"电脑管家-工具-远程控制-允许远程控制\""}
+          {"img": "remote_ctrl6.webp", "caption": "图一：在融合设备中心-设备卡片-\"远程控制\""},
+          {"img": "remote_ctrl7.webp", "caption": "图二：笔记本\"电脑管家\"升级至6.x及以上版本"},
+          {"img": "remote_ctrl8.webp", "caption": "图三：打开笔记本\"电脑管家-工具-远程控制-允许远程控制\""}
         ]
       },
       {
@@ -44,14 +44,14 @@
               "level": "letter",
               "text": "a.在笔记本打开远程控制，并登录小米账号",
               "figures": [
-                {"img": "remote_ctrl9.png", "caption": "图一：在远程控制登录小米账号"}
+                {"img": "remote_ctrl9.webp", "caption": "图一：在远程控制登录小米账号"}
               ]
             },
             {
               "level": "letter",
               "text": "b.让笔记本处于可被绑定状态",
               "figures": [
-                {"img": "remote_ctrl10.png", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加设备\"，让笔记本处于可被绑定状态"}
+                {"img": "remote_ctrl10.webp", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加设备\"，让笔记本处于可被绑定状态"}
               ]
             },
             {"level": "letter", "text": "c.在移动端米家APP绑定笔记本"},
@@ -59,17 +59,17 @@
               "level": "roman",
               "text": "i.发现笔记本设备",
               "figures": [
-                {"img": "remote_ctrl11.png", "caption": "图一：米家自动弹出发现周边设备"},
-                {"img": "remote_ctrl12.png", "caption": "图二：米家APP右上角\"+\"添加设备"},
-                {"img": "remote_ctrl13.png", "caption": "图三：支持扫描附近设备"},
-                {"img": "remote_ctrl14.png", "caption": "图四：支持手动添加设备\"办公学习-笔记本电脑\""}
+                {"img": "remote_ctrl11.webp", "caption": "图一：米家自动弹出发现周边设备"},
+                {"img": "remote_ctrl12.webp", "caption": "图二：米家APP右上角\"+\"添加设备"},
+                {"img": "remote_ctrl13.webp", "caption": "图三：支持扫描附近设备"},
+                {"img": "remote_ctrl14.webp", "caption": "图四：支持手动添加设备\"办公学习-笔记本电脑\""}
               ]
             },
             {
               "level": "roman",
               "text": "ii.进入绑定流程",
               "figures": [
-                {"img": "remote_ctrl15.png", "caption": "图一：点击笔记本图标，进入绑定流程"}
+                {"img": "remote_ctrl15.webp", "caption": "图一：点击笔记本图标，进入绑定流程"}
               ]
             },
             {"level": "note", "text": "如果您安装的是电脑管家6.x"},
@@ -77,30 +77,30 @@
               "level": "letter",
               "text": "a.在电脑管家-工具-小米网络模组，点击\"添加设备\"",
               "figures": [
-                {"img": "remote_ctrl16.png", "caption": "图一：在远程控制登录小米账号"}
+                {"img": "remote_ctrl16.webp", "caption": "图一：在远程控制登录小米账号"}
               ]
             },
             {
               "level": "bullet",
               "text": "检查笔记本小米网络模组的网络连接是否正常",
               "figures": [
-                {"img": "remote_ctrl17.png", "caption": "图一：打开远程控制-设置-小米网络模组管理"},
-                {"img": "remote_ctrl18.png", "caption": "图二：找到\"模组联网\"手动添加网络"}
+                {"img": "remote_ctrl17.webp", "caption": "图一：打开远程控制-设置-小米网络模组管理"},
+                {"img": "remote_ctrl18.webp", "caption": "图二：找到\"模组联网\"手动添加网络"}
               ]
             },
             {
               "level": "letter",
               "text": "a.如果您安装的是电脑管家5.8.x",
               "figures": [
-                {"img": "remote_ctrl19.png", "caption": "图一：打开远程控制-设置-小米网络模组管理"},
-                {"img": "remote_ctrl20.png", "caption": "图二：找到\"模组联网\"手动添加网络"}
+                {"img": "remote_ctrl19.webp", "caption": "图一：打开远程控制-设置-小米网络模组管理"},
+                {"img": "remote_ctrl20.webp", "caption": "图二：找到\"模组联网\"手动添加网络"}
               ]
             },
             {
               "level": "letter",
               "text": "b.如果您安装的是电脑管家6.x",
               "figures": [
-                {"img": "remote_ctrl21.png", "caption": "图一：打开远程控制-设置-小米网络模组管理"}
+                {"img": "remote_ctrl21.webp", "caption": "图一：打开远程控制-设置-小米网络模组管理"}
               ]
             }
           ]
@@ -127,10 +127,10 @@
         "num": "1",
         "title": "登录小米账号并打开文件服务",
         "figures": [
-          {"img": "file_mgr1.png", "caption": "图一：手机、平板登录小米账号"},
-          {"img": "file_mgr2.png", "caption": "图二：笔记本电脑登录同一个小米账号"},
-          {"img": "file_mgr3.png", "caption": "图三：如果您的笔记本安装的电脑管家是5.8.x，打开\"电脑管家-设置-文件服务\""},
-          {"img": "file_mgr4.png", "caption": "图四：如果您的笔记本安装的电脑管家是6.x版本，打开\"电脑管家-工具-设备互联-文件服务\""}
+          {"img": "file_mgr1.webp", "caption": "图一：手机、平板登录小米账号"},
+          {"img": "file_mgr2.webp", "caption": "图二：笔记本电脑登录同一个小米账号"},
+          {"img": "file_mgr3.webp", "caption": "图三：如果您的笔记本安装的电脑管家是5.8.x，打开\"电脑管家-设置-文件服务\""},
+          {"img": "file_mgr4.webp", "caption": "图四：如果您的笔记本安装的电脑管家是6.x版本，打开\"电脑管家-工具-设备互联-文件服务\""}
         ]
       },
       {
@@ -138,8 +138,8 @@
         "num": "2",
         "title": "在文件管理APP找到笔记本入口",
         "figures": [
-          {"img": "file_mgr5.png", "caption": "图一：手机/PAD文管APP"},
-          {"img": "file_mgr6.png", "caption": "图二：笔记本的入口"}
+          {"img": "file_mgr5.webp", "caption": "图一：手机/PAD文管APP"},
+          {"img": "file_mgr6.webp", "caption": "图二：笔记本的入口"}
         ]
       },
       {
@@ -198,7 +198,7 @@
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play1.png", "caption": "图一：打开小米电脑管家，检查更新，升级到最新版电脑管家"}
+          {"img": "smart_play1.webp", "caption": "图一：打开小米电脑管家，检查更新，升级到最新版电脑管家"}
         ]
       },
       {"type": "step_title", "text": "第二步：添加笔记本电脑到米家"},
@@ -206,14 +206,14 @@
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play2.png", "caption": "图一：在电脑管家登录小米账号"}
+          {"img": "smart_play2.webp", "caption": "图一：在电脑管家登录小米账号"}
         ]
       },
       {"type": "step_text", "text": "2.让笔记本处于可被绑定状态"},
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play3.png", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加设备\"，让笔记本处于可被绑定状态"}
+          {"img": "smart_play3.webp", "caption": "图一：在笔记本远程控制 APP，点击\"设置-小米网络模组管理-添加设备\"，让笔记本处于可被绑定状态"}
         ]
       },
       {"type": "main_title", "text": "我的手机和平板可以管理笔记本文件吗？", "break": true},
@@ -225,10 +225,10 @@
         "num": "1",
         "title": "登录小米账号并打开文件服务",
         "figures": [
-          {"img": "smart_play4.png", "caption": "图一：手机、平板登录小米账号"},
-          {"img": "smart_play5.png", "caption": "图二：笔记本电脑登录同一个小米账号"},
-          {"img": "smart_play6.png", "caption": "图三：如果您的笔记本安装的电脑管家是5.8.x，打开\"电脑管家-设置-文件服务\""},
-          {"img": "smart_play7.png", "caption": "图四：如果您的笔记本安装的电脑管家是6.x版本，打开\"电脑管家-工具-设备互联-文件服务\""}
+          {"img": "smart_play4.webp", "caption": "图一：手机、平板登录小米账号"},
+          {"img": "smart_play5.webp", "caption": "图二：笔记本电脑登录同一个小米账号"},
+          {"img": "smart_play6.webp", "caption": "图三：如果您的笔记本安装的电脑管家是5.8.x，打开\"电脑管家-设置-文件服务\""},
+          {"img": "smart_play7.webp", "caption": "图四：如果您的笔记本安装的电脑管家是6.x版本，打开\"电脑管家-工具-设备互联-文件服务\""}
         ]
       },
       {
@@ -237,8 +237,8 @@
         "num": "2",
         "title": "在文件管理APP找到笔记本入口",
         "figures": [
-          {"img": "smart_play8.png", "caption": "图一：手机/PAD文管APP"},
-          {"img": "smart_play9.png", "caption": "图二：笔记本的入口"}
+          {"img": "smart_play8.webp", "caption": "图一：手机/PAD文管APP"},
+          {"img": "smart_play9.webp", "caption": "图二：笔记本的入口"}
         ]
       },
       {
