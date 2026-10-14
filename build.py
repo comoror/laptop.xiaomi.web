@@ -107,6 +107,26 @@ def webp_size(path):
     return None
 
 
+def caption_extra_padding(caption):
+    """图注超过 2 行时，给卡片补足高度，避免图注压到图片上。
+
+    卡片按设计稿只有 2 行图注的余量（图注高 32px/行 + 下边距 8px = 72px），
+    英文比中文长，个别图注会排到 3 行。这里按字符宽度估算行数，
+    多出来的高度加到 figure 的 padding-bottom（图注是贴底的绝对定位，
+    卡片变高它自然下移，不会压图）。
+    """
+    if not caption:
+        return 0
+    text_w = 680 - 40          # 卡片宽度 - 图注左右内边距
+    line_h = 32                # 图注行高
+    base = 2 * line_h + 8      # 设计稿允许的两行高度
+    cjk = sum(1 for ch in caption if ord(ch) > 0x2E80)
+    other = len(caption) - cjk
+    width = cjk * 20 + other * 10.4     # 20px 字体：汉字 1em，西文约 0.52em
+    lines = max(1, int(width / text_w) + (1 if width % text_w else 0))
+    return max(0, lines * line_h + 8 - base)
+
+
 def render_figures(figures):
     """图片列表 → <figure> 片段（图注渲染在卡片内部，见模板 CSS）。
 
@@ -125,11 +145,13 @@ def render_figures(figures):
         dims = ' width="%d" height="%d"' % size if size else ""
         lazy = "" if _fig_index < EAGER_FIGURES else ' loading="lazy"'
         _fig_index += 1
+        extra = caption_extra_padding(caption)
+        style = ' style="padding-bottom:%dpx"' % extra if extra else ""
         out.append(
-            '<figure><a class="zoom" href="images/%s" aria-label="%s">'
+            '<figure%s><a class="zoom" href="images/%s" aria-label="%s">'
             '<img src="images/%s" alt="%s"%s decoding="async"%s></a>'
             "<figcaption>%s</figcaption></figure>"
-            % (fig["img"], esc(caption), fig["img"], esc(caption), dims, lazy, esc(caption))
+            % (style, fig["img"], esc(caption), fig["img"], esc(caption), dims, lazy, esc(caption))
         )
     return "\n".join(out)
 
