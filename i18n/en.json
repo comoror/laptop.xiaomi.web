@@ -186,7 +186,7 @@
           "REDMI Book Pro 14 2026",
           "REDMI Book Pro 16 2026",
           "Xiaomi Book Pro 14",
-          "If your laptop is one of ((the models below)), use \"Remote Control 2.0\" to control it; other models and brands are not supported at the moment"
+          "If your laptop is a different model, use \"Remote Control 2.0\" to control it; other models and brands are not supported at the moment"
         ]
       },
       {"type": "step_title", "text": "Step 1: Check that the software version is correct"},
@@ -205,11 +205,11 @@
           {"img": "smart_play2.webp", "caption": "Fig. 1: Log in to your Xiaomi account in PC Manager"}
         ]
       },
-      {"type": "step_text", "text": "2. Change the laptop to a status that allows pairing"},
+      {"type": "step_text", "text": "2. Use PC Manager to add your laptop to Mi Home with one click"},
       {
         "type": "figures",
         "figures": [
-          {"img": "smart_play3.webp", "caption": "Fig. 1: In the Remote Control app on your laptop, click \"Settings - Xiaomi IoT Module Manager - Add to Mi Home\" and change the laptop to a status that allows pairing"}
+          {"img": "smart_play3.webp", "caption": "Fig. 1: In PC Manager, go to Tools - Xiaomi IoT Module, and click \"Add device\""}
         ]
       },
       {"type": "main_title", "text": "Can I manage laptop files from my phone or tablet?", "break": true},
