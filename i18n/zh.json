@@ -82,11 +82,7 @@
             },
             {
               "level": "bullet",
-              "text": "检查笔记本小米网络模组的网络连接是否正常",
-              "figures": [
-                {"img": "remote_ctrl17.webp", "caption": "图一：打开远程控制-设置-小米网络模组管理"},
-                {"img": "remote_ctrl18.webp", "caption": "图二：找到\"模组联网\"手动添加网络"}
-              ]
+              "text": "检查笔记本小米网络模组的网络连接是否正常"
             },
             {
               "level": "letter",

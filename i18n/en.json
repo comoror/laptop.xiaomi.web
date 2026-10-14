@@ -82,11 +82,7 @@
             },
             {
               "level": "bullet",
-              "text": "Check that the laptop's Xiaomi IoT Module is connected to the Internet",
-              "figures": [
-                {"img": "remote_ctrl17.webp", "caption": "Fig. 1: Go to Remote Control - Settings - Xiaomi IoT Module Manager"},
-                {"img": "remote_ctrl18.webp", "caption": "Fig. 2: Select \"Module network\" to manually add the network"}
-              ]
+              "text": "Check that the laptop's Xiaomi IoT Module is connected to the Internet"
             },
             {
               "level": "letter",
