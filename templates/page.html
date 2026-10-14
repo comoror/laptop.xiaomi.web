@@ -2,103 +2,142 @@
 <html lang="{{LANG}}">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- 设计稿（1568px 宽的 392pt 手机稿）按 2x 落 CSS：页面逻辑宽度 784，手机上由系统按比例缩放显示 -->
+<meta name="viewport" content="width=784,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/misans.css">
 <style>
 /* ========== 主题变量：亮色 / 深色（跟随手机系统） ========== */
 :root {
   --bg: #ffffff;
-  --title: #333333;
-  --body: rgba(0, 0, 0, 0.5);
-  --caption: #999999;
-  --req: #666666;
-  --img-bg: #f5f5f5;
-  --divider: rgba(0, 0, 0, 0.15);
-  --link: #32CD32;
+  --title: #333333;        /* 页面大标题 */
+  --heading: #000000;      /* 主标题 / 小节标题 / 常见问题 */
+  --sub: #4d4d4d;          /* 说明文字 / 步骤标题 / FAQ 问句 */
+  --body: rgba(0, 0, 0, 0.5);  /* 列表与答案正文 */
+  --caption: #999999;      /* 图注 */
+  --img-bg: #f7f7f7;       /* 图片卡片底色 */
+  --divider: #e6e6e6;
+  --link: #00B884;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #252b2e;
     --title: #ffffff;
+    --heading: #ffffff;
+    --sub: #b3b3b3;
     --body: rgba(255, 255, 255, 0.6);
     --caption: #9e9e9e;
-    --req: #b3b3b3;
     --img-bg: #1e2427;
     --divider: rgba(255, 255, 255, 0.15);
-    --link: #32CD32;
+    --link: #00B884;
   }
 }
 
-/* ========== 基础样式（对应插件 RN 版样式） ========== */
+/* ========== 基础样式（设计稿 2x：全部尺寸 = 1568px 设计稿 ÷ 2） ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   background: var(--bg);
   color: var(--title);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+  font-family: "MiSans", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
   line-height: 1.4;
 }
 .page {
-  max-width: 640px;
+  max-width: 784px;
   margin: 0 auto;
-  padding: 20px 25px 40px;
+  padding: 52px 52px 116px;
 }
 
 /* 标题 */
-.page-title   { font-size: 32px; font-weight: 400; margin-bottom: 50px; }
-.main-title   { font-size: 20px; font-weight: 500; line-height: 26px; margin-bottom: 20px; }
-.section-title{ font-size: 20px; font-weight: 500; line-height: 24px; margin: 20px 0; }
+.page-title   { font-size: 64px; font-weight: 400; line-height: 1.2; margin-bottom: 108px; }
+.main-title   { font-size: 40px; font-weight: 500; line-height: 56px; margin-bottom: 44px; color: var(--heading); }
+.main-title.break { margin-top: 176px; }   /* 智能玩法页里的跨板块大间隔 */
+.section-title{ font-size: 40px; font-weight: 500; line-height: 56px; margin: 0 0 48px; color: var(--heading); }
+/* 智能玩法页：设备要求之后直接接小节标题，需要设计稿里那段大间距 */
+.requirement + .section-title { margin-top: 160px; }
+
+/* 说明文字 / 清单 */
+.body-text    { font-size: 28px; line-height: 38px; color: var(--sub); margin-bottom: 24px; }
+.requirement  { font-size: 28px; line-height: 38px; color: var(--sub); }
+.model-list   { list-style: none; }
+.model-list li {
+  position: relative;
+  padding-left: 38px;
+  font-size: 24px;
+  line-height: 40px;
+  color: var(--body);
+}
+.model-list li::before { content: "•"; position: absolute; left: 14px; color: var(--body); }
 
 /* 功能区 / 步骤区 */
-.feature-title{ font-size: 15px; line-height: 22px; margin: 15px 0; }
-.step         { margin-bottom: 30px; }
-.step-title   { font-size: 16px; line-height: 22px; margin-bottom: 15px; }
+.feature      { margin-top: 0; }
+.feature + .feature .feature-title { margin-top: 64px; }
+.feature-title{ font-size: 28px; line-height: 38px; color: var(--sub); }
+.step         { margin-bottom: 0; }
+.step-title   { font-size: 28px; line-height: 38px; color: var(--sub); margin: 80px 0 30px; }
+/* 步骤标题紧跟小节标题时（file_manager / smart_play 的管理文件小节）不留上间距 */
+.section-title + .step .step-title,
+.section-title + .step-title { margin-top: 0; }
+.step-title .num { display: inline-block; width: 40px; }
+.step-text    { font-size: 24px; line-height: 40px; color: var(--body); }
 
-/* 图片与图注 */
+/* 图片卡片：图片满宽居中裁切，图注在卡片内底部居中 */
+figure {
+  position: relative;
+  margin: 36px 0 50px;
+  border-radius: 24px;
+  background: var(--img-bg);
+  overflow: hidden;
+}
 figure img {
   display: block;
   width: 100%;
-  height: 250px;
-  object-fit: contain;
-  background: var(--img-bg);
-  border-radius: 12px;
+  height: auto;
+  margin: -16px 0;
 }
-figure { margin-bottom: 12px; }
 figcaption {
-  font-size: 13px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px 8px;   /* 贴卡片底部固定下边距（不用百分比，避免高图压图注） */
+  font-size: 20px;
+  line-height: 32px;
   color: var(--caption);
   text-align: center;
-  margin: 5px 0;
 }
 
-/* 分割线 / 要求说明 */
-.divider    { border: none; height: 1px; background: var(--divider); margin: 30px 0; }
-.requirement{ font-size: 14px; color: var(--req); line-height: 22px; margin: 30px 0; }
+/* 分割线 */
+.divider { border: none; height: 1px; background: var(--divider); margin: 92px 0; }
 
 /* 常见问题 */
-.faq-title { font-size: 18px; font-weight: 500; margin-bottom: 20px; }
-.faq-item  { margin-top: 20px; }
-.faq-q     { font-size: 15px; line-height: 22px; margin-bottom: 12px; }
-.a-item    { display: flex; font-size: 14px; line-height: 20px; color: var(--body); margin-bottom: 8px; }
-.a-item .mark { flex: none; margin-right: 8px; width: 14px; }
+.faq-title { font-size: 40px; font-weight: 500; line-height: 56px; margin-bottom: 48px; color: var(--heading); }
+.faq-item  { margin-top: 48px; }
+.faq-q     { font-size: 28px; line-height: 38px; color: var(--sub); margin-bottom: 22px; }
+.a-item    { display: flex; font-size: 24px; line-height: 44px; color: var(--body); }
+.a-item .mark { flex: none; margin-right: 14px; width: 24px; }
 .a-text    { flex: 1; min-width: 0; }
-/* 层级：bullet=•, check=∘, sub=次级•, letter=a./b./c., roman=i./ii. */
-.lvl-bullet, .lvl-check { padding-left: 10px; }
-.lvl-letter { padding-left: 15px; font-weight: 500; }
-.lvl-roman  { padding-left: 20px; font-weight: 500; }
-.lvl-sub    { padding-left: 20px; }
+/* 层级：bullet=•, check=∘, sub=次级•, letter=a./b./c., roman=i./ii., note=无标记说明行 */
+.lvl-bullet, .lvl-check { padding-left: 14px; }
+.lvl-sub, .lvl-letter, .lvl-note { padding-left: 32px; }
+.lvl-roman  { padding-left: 56px; }
+.lvl-note   { margin-top: 16px; }
 
-/* 链接（页内锚点 / 页面互跳 / 外链） */
-a { color: var(--link); text-decoration: underline; }
+/* 链接（页内锚点 / 页面互跳 / 外链）与高亮文字 */
+a { color: var(--link); text-decoration: none; }
 a:active { opacity: 0.6; }
+.hl { color: var(--link); }
 
 /* 测试索引页（index.html，开发测试用入口） */
-.index-list { margin-top: 20px; }
-.index-list li { list-style: none; margin-bottom: 16px; font-size: 16px; line-height: 22px; }
-.index-note { margin-top: 30px; font-size: 13px; color: var(--caption); }
+.index-list { margin-top: 40px; }
+.index-list li { list-style: none; margin-bottom: 36px; font-size: 30px; line-height: 42px; }
+.index-note { margin-top: 60px; font-size: 24px; line-height: 36px; color: var(--caption); }
 </style>
 </head>
 <body>

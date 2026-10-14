@@ -7,7 +7,7 @@
     templates/page.html  +  i18n/zh.json / en.json  +  assets/images/
         │
         ▼  python build.py
-    dist/            ← 4 个静态 HTML + images/，整个目录上传即为网站
+    dist/            ← 6 个静态 HTML + images/，整个目录上传即为网站
 
 改文案只改 i18n/*.json；改版式改 templates/page.html 或本文件的渲染函数。
 """
@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parent
 I18N_DIR = ROOT / "i18n"
 TEMPLATE_PATH = ROOT / "templates" / "page.html"
 ASSETS_DIR = ROOT / "assets" / "images"
+FONTS_DIR = ROOT / "assets" / "fonts"
 DIST_DIR = ROOT / "dist"
 
 # (i18n 中的页面 key, 语言, 输出文件名)
@@ -30,6 +31,8 @@ PAGES = [
     ("remote_control", "en", "remote_control_en.html"),
     ("file_manager",   "zh", "file_manager.html"),
     ("file_manager",   "en", "file_manager_en.html"),
+    ("smart_play",     "zh", "smart_play.html"),
+    ("smart_play",     "en", "smart_play_en.html"),
 ]
 
 LANG_ATTR = {"zh": "zh-CN", "en": "en"}
@@ -41,6 +44,7 @@ LEVELS = {
     "sub":    ("•", "lvl-sub"),
     "letter": ("",  "lvl-letter"),
     "roman":  ("",  "lvl-roman"),
+    "note":   ("",  "lvl-note"),   # 无标记的说明行（如「如果您安装的是电脑管家 5.8.x」）
 }
 
 # 文案中的链接写法：[[显示文字|目标地址]]，目标可以是
@@ -48,6 +52,8 @@ LEVELS = {
 #   页内锚点:  #step1
 #   外部链接:  https://hyperos.mi.com/
 LINK_RE = re.compile(r"\[\[([^\]|]+)\|([^\]]+)\]\]")
+# 文案中的高亮写法：((显示文字))，渲染成绿色无下划线文字（不是链接）
+HL_RE = re.compile(r"\(\(([^()]+)\)\)")
 
 
 def esc(text):
@@ -56,16 +62,17 @@ def esc(text):
 
 
 def fmt(text):
-    """转义文案并把 [[文字|地址]] 转成 <a> 标签。"""
+    """转义文案，再把 [[文字|地址]] 转成 <a>、((文字)) 转成高亮。"""
     escaped = esc(text)
-    return LINK_RE.sub(
-        lambda m: '<a href="%s">%s</a>' % (esc(m.group(2)), m.group(1)),
+    escaped = LINK_RE.sub(
+        lambda m: '<a href="%s">%s</a>' % (esc(m.group(2)), esc(m.group(1))),
         escaped,
     )
+    return HL_RE.sub(lambda m: '<span class="hl">%s</span>' % m.group(1), escaped)
 
 
 def render_figures(figures):
-    """图片列表 → <figure> 片段。"""
+    """图片列表 → <figure> 片段（图注渲染在卡片内部，见模板 CSS）。"""
     out = []
     for fig in figures or []:
         caption = fig.get("caption", "")
@@ -106,8 +113,24 @@ def render_faq(faq):
     )
 
 
+def render_step_title(step):
+    """步骤标题：可选 num（渲染成定宽序号，与标题之间留出设计稿的间距）。
+
+    step 既可以是 file_manager 的 steps 条目（title），
+    也可以是 smart_play 的 step_title / step 区块（title 或 text）。
+    """
+    num = step.get("num")
+    text = step.get("title", step.get("text", ""))
+    if num:
+        return '<div class="step-title"><span class="num">%s</span>%s</div>' % (
+            esc(num),
+            fmt(text),
+        )
+    return '<div class="step-title">%s</div>' % fmt(text)
+
+
 def render_remote_control(data):
-    """远控页：页面标题 → 主标题 → 功能1/2/3 → 分割线 → 常见问题。"""
+    """远控页：页面标题 → 主标题 → 功能1/2/3/4 → 分割线 → 常见问题。"""
     parts = [
         '<h1 class="page-title">%s</h1>' % fmt(data["page_title"]),
         '<h2 class="main-title">%s</h2>' % fmt(data["main_title"]),
@@ -123,7 +146,7 @@ def render_remote_control(data):
 
 
 def render_file_manager(data):
-    """文件管理页：标题 → 主标题 → 设备要求 → 步骤1/2/3 → 常见问题。"""
+    """文件管理页：标题 → 主标题 → 设备要求 → 分割线 → 小节标题 → 步骤1/2/3 → 分割线 → 常见问题。"""
     parts = [
         '<h1 class="page-title">%s</h1>' % fmt(data["page_title"]),
         '<h2 class="main-title">%s</h2>' % fmt(data["main_title"]),
@@ -134,39 +157,90 @@ def render_file_manager(data):
     for step in data["steps"]:
         sid = ' id="%s"' % step["id"] if step.get("id") else ""
         parts.append(
-            '<section class="step"%s><div class="step-title">%s</div>%s</section>'
-            % (sid, fmt(step["title"]), render_figures(step.get("figures")))
+            '<section class="step"%s>%s%s</section>'
+            % (sid, render_step_title(step), render_figures(step.get("figures")))
         )
     parts.append('<hr class="divider">')
     parts.append(render_faq(data["faq"]))
     return "\n".join(parts)
 
 
+def render_block(block):
+    """智能玩法页的通用区块渲染（区块类型见 i18n/smart_play.json 的 blocks）。"""
+    kind = block["type"]
+    if kind == "page_title":
+        return '<h1 class="page-title">%s</h1>' % fmt(block["text"])
+    if kind == "main_title":
+        cls = "main-title break" if block.get("break") else "main-title"
+        return '<h2 class="%s">%s</h2>' % (cls, fmt(block["text"]))
+    if kind == "section_title":
+        return '<h2 class="section-title">%s</h2>' % fmt(block["text"])
+    if kind == "body_text":
+        return '<div class="body-text">%s</div>' % fmt(block["text"])
+    if kind == "requirement":
+        return '<div class="requirement">%s</div>' % fmt(block["text"])
+    if kind == "list":
+        lis = "".join("<li>%s</li>" % fmt(i) for i in block["items"])
+        return '<ul class="model-list">%s</ul>' % lis
+    if kind == "step_title":
+        return render_step_title(block)
+    if kind == "step_text":
+        return '<div class="step-text">%s</div>' % fmt(block["text"])
+    if kind == "figures":
+        return render_figures(block.get("figures"))
+    if kind == "step":
+        sid = ' id="%s"' % block["id"] if block.get("id") else ""
+        return '<section class="step"%s>%s%s</section>' % (
+            sid,
+            render_step_title(block),
+            render_figures(block.get("figures")),
+        )
+    if kind == "divider":
+        return '<hr class="divider">'
+    sys.exit("unknown block type: %s" % kind)
+
+
+def render_smart_play(data):
+    """智能玩法页：按 blocks 顺序拼装（机型清单 / 步骤 / 管理文件小节混排）。"""
+    return "\n".join(render_block(b) for b in data["blocks"])
+
+
 RENDERERS = {
     "remote_control": render_remote_control,
     "file_manager": render_file_manager,
+    "smart_play": render_smart_play,
 }
 
 
+def page_display_title(page_data):
+    """取页面标题：优先 page_title；智能玩法页的标题在 blocks 里。"""
+    if page_data.get("page_title"):
+        return page_data["page_title"]
+    for block in page_data.get("blocks", []):
+        if block.get("type") == "page_title":
+            return block["text"]
+    return ""
+
+
 def render_index():
-    """测试索引页：列出 4 个页面入口（标题自动取自 i18n，保持同步）。"""
-    zh = json.loads((I18N_DIR / "zh.json").read_text(encoding="utf-8"))
-    en = json.loads((I18N_DIR / "en.json").read_text(encoding="utf-8"))
-    entries = [
-        ("remote_control.html",    "%s（中文）" % zh["remote_control"]["page_title"]),
-        ("remote_control_en.html", "%s (English)" % en["remote_control"]["page_title"]),
-        ("file_manager.html",      "%s（中文）" % zh["file_manager"]["page_title"]),
-        ("file_manager_en.html",   "%s (English)" % en["file_manager"]["page_title"]),
-    ]
-    items = "\n".join(
-        '<li><a href="%s">%s</a></li>' % (href, esc(text)) for href, text in entries
-    )
+    """测试索引页：列出全部页面入口（标题自动取自 i18n，保持同步）。"""
+    cache = {
+        lang: json.loads((I18N_DIR / ("%s.json" % lang)).read_text(encoding="utf-8"))
+        for lang in set(p[1] for p in PAGES)
+    }
+    items = []
+    for page_key, lang, out_name in PAGES:
+        title = page_display_title(cache[lang][page_key])
+        suffix = "（中文）" if lang == "zh" else " (English)"
+        items.append(
+            '<li><a href="%s">%s</a></li>' % (out_name, esc(title + suffix))
+        )
     return (
         '<h1 class="page-title">laptop.xiaomi.web</h1>'
         '<h2 class="main-title">页面索引 / Page Index</h2>'
         '<ul class="index-list">%s</ul>'
         '<p class="index-note">开发测试用入口页；正式使用时插件直接跳转到具体页面，'
-        "此页不会被用户看到。</p>" % items
+        "此页不会被用户看到。</p>" % "\n".join(items)
     )
 
 
@@ -213,6 +287,15 @@ def main():
         shutil.rmtree(img_out)
     shutil.copytree(ASSETS_DIR, img_out)
     print("copied %d images -> dist/images/" % len(list(img_out.iterdir())))
+
+    # 复制 MiSans 字体子集到 dist/fonts/（页面 head 里 link 引用）
+    if not FONTS_DIR.exists():
+        sys.exit("fonts not found: %s" % FONTS_DIR)
+    font_out = DIST_DIR / "fonts"
+    if font_out.exists():
+        shutil.rmtree(font_out)
+    shutil.copytree(FONTS_DIR, font_out)
+    print("copied %d font files -> dist/fonts/" % len(list(font_out.iterdir())))
     print("done.")
 
 
