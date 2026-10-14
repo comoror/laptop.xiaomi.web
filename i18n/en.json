@@ -20,7 +20,7 @@
         ]
       },
       {
-        "title": "Function 3: For tablets running HyperOS4, use Remote Control to access your laptop desktop directly.",
+        "title": "Function 3: For tablets running HyperOS4, use Remote Control to access your laptop directly.",
         "figures": [
           {"img": "remote_ctrl6.webp", "caption": "Fig. 1: In Fusion Device Center - device card - \"Remote Control\""},
           {"img": "remote_ctrl7.webp", "caption": "Fig. 2: Update Xiaomi PC Manager on your laptop to version 6.x or later"},

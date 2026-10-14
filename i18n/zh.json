@@ -20,7 +20,7 @@
         ]
       },
       {
-        "title": "功能3：对于使用HyperOS4的平板，使用远程控制直接访问笔记本电脑桌面。",
+        "title": "功能3：对于使用HyperOS4的平板，使用远程控制直接访问笔记本电脑",
         "figures": [
           {"img": "remote_ctrl6.webp", "caption": "图一：在融合设备中心-设备卡片-\"远程控制\""},
           {"img": "remote_ctrl7.webp", "caption": "图二：笔记本\"电脑管家\"升级至6.x及以上版本"},
