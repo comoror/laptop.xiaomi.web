@@ -186,8 +186,7 @@
           "REDMI Book Pro 14 2026",
           "REDMI Book Pro 16 2026",
           "Xiaomi Book Pro 14",
-          "4150",
-          "If your laptop is one of ((the versions below)), use \"Remote Control 2.0\" to control it; other models and brands are not supported at the moment"
+          "If your laptop is one of ((the models below)), use \"Remote Control 2.0\" to control it; other models and brands are not supported at the moment"
         ]
       },
       {"type": "step_title", "text": "Step 1: Check that the software version is correct"},
