@@ -1,5 +1,6 @@
 /* MiSans（小米官方字体）子集：先按本套页面用到的字符裁剪，
    再把几十个分片合并成每字重一个文件（请求数 30+ → 2）。
+   Medium 只保留 500 字重标题用到的字，所以比 Regular 小很多。
    重新生成：python tools/build_font.py */
 @font-face{font-family:MiSans;font-style:normal;font-weight:400;font-display:fallback;src:local('MiSans'),url('misans-regular.woff2') format('woff2');}
 @font-face{font-family:MiSans;font-style:normal;font-weight:500;font-display:fallback;src:local('MiSans'),url('misans-medium.woff2') format('woff2');}

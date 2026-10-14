@@ -53,13 +53,53 @@ def fetch(url, path):
 
 
 def collect_chars():
-    """页面用到的全部字符：i18n 文案 + 模板骨架。"""
-    chars = set("0123456789")
+    """返回 (页面全部用字, 会以 500 字重渲染的用字)。
+
+    模板里只有 .main-title / .section-title / .faq-title 是 font-weight:500，
+    其余（页面大标题、功能标题、步骤标题、正文、清单、FAQ 问答）都是 400。
+    所以 Medium 那份只需覆盖这几个标题用到的字，体积能砍掉一大半。
+
+    新增文案如果给 500 字重的元素加了新字，重跑本脚本会自动纳入。
+    """
+    allc = set("0123456789")
+    # i18n 与模板：模板去掉 <style> 与注释（那些中文不会渲染），保留 HTML 文本与 JS 里的提示词
     for pattern in ("i18n/*.json", "templates/*.html"):
         for path in glob.glob(os.path.join(ROOT, pattern)):
             text = open(path, encoding="utf-8").read()
-            chars |= set(re.sub(r"\{\{[A-Z]+\}\}", "", text))
-    return {c for c in chars if ord(c) > 0x1F}
+            if path.endswith(".html"):
+                text = re.sub(r"<style[^>]*>.*?</style>", "", text, flags=re.S)
+                text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+            allc |= set(re.sub(r"\{\{[A-Z]+\}\}", "", text))
+    # build.py：只取字符串字面量（里面有面向用户的索引页标题与说明），不含注释
+    try:
+        import ast
+        tree = ast.parse(open(os.path.join(ROOT, "build.py"), encoding="utf-8").read())
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                allc |= set(node.value)
+    except SyntaxError:
+        pass
+
+    bold = set("页面索引 / Page Index")   # index.html 的 .main-title（build.py 生成）
+    for path in glob.glob(os.path.join(ROOT, "i18n", "*.json")):
+        data = json.loads(open(path, encoding="utf-8").read())
+        for page in data.values():
+            if not isinstance(page, dict):
+                continue
+            for key in ("main_title", "section_title"):
+                if isinstance(page.get(key), str):
+                    bold |= set(page[key])
+            faq = page.get("faq")
+            if isinstance(faq, dict) and isinstance(faq.get("title"), str):
+                bold |= set(faq["title"])
+            for block in page.get("blocks") or []:
+                if (block.get("type") in ("main_title", "section_title")
+                        and isinstance(block.get("text"), str)):
+                    bold |= set(block["text"])
+
+    allc = {c for c in allc if ord(c) > 0x1F}
+    bold = {c for c in bold if ord(c) > 0x1F}
+    return allc, bold
 
 
 def load_ranges():
@@ -190,19 +230,26 @@ def main():
     except ImportError:
         sys.exit("需要 fontTools：pip install fonttools brotli")
 
-    chars = collect_chars()
-    cps = {ord(c) for c in chars}
-    print("页面用字：%d 个（汉字 %d）" % (len(cps), sum(1 for c in chars if 0x4E00 <= ord(c) <= 0x9FFF)))
+    allc, bold = collect_chars()
+    print("页面用字：%d 个（汉字 %d）；其中 500 字重标题用字：%d 个"
+          % (len(allc), sum(1 for c in allc if 0x4E00 <= ord(c) <= 0x9FFF), len(bold)))
 
     slices = load_ranges()
-    need_idx = set()
-    for cp in cps:
-        for idx, range_cps in slices.items():
-            if cp in range_cps:
-                need_idx.add(idx)
-    uncovered = sorted(chr(c) for c in cps
+
+    def pick_idx(char_set):
+        wanted = {ord(c) for c in char_set}
+        idx = set()
+        for cp in wanted:
+            for i, range_cps in slices.items():
+                if cp in range_cps:
+                    idx.add(i)
+        return wanted, idx
+
+    all_cps, all_idx = pick_idx(allc)
+    bold_cps, bold_idx = pick_idx(bold)
+    uncovered = sorted(chr(c) for c in all_cps
                        if not any(c in r for r in slices.values()))
-    print("涉及分片：%s" % sorted(need_idx))
+    print("全部用字涉及分片 %d 个；500 字重涉及分片 %d 个" % (len(all_idx), len(bold_idx)))
     if uncovered:
         print("注意：MiSans SC 未覆盖 %d 个字符，将回退系统字体：%s"
               % (len(uncovered), "".join(uncovered)))
@@ -227,21 +274,26 @@ def main():
 
     css = ["/* MiSans（小米官方字体）子集：先按本套页面用到的字符裁剪，",
            "   再把几十个分片合并成每字重一个文件（请求数 30+ → 2）。",
+           "   Medium 只保留 500 字重标题用到的字，所以比 Regular 小很多。",
            "   重新生成：python tools/build_font.py */"]
     total = 0
     for weight, css_weight in WEIGHTS:
-        merged = build_merged(weight, cps, need_idx, by_index, Options, Subsetter, TTFont)
+        use_cps, use_idx = (bold_cps, bold_idx) if css_weight == 500 else (all_cps, all_idx)
+        merged = build_merged(weight, use_cps, use_idx, by_index, Options, Subsetter, TTFont)
         if merged is None:
             sys.exit("没有可用的 MiSans %s 分片" % weight)
         out_name = "misans-%s.woff2" % weight.lower()
         out_path = os.path.join(FONTS_DIR, out_name)
         merged.flavor = "woff2"
         merged.save(out_path)
-        glyphs = len(merged.getBestCmap())
+        cmap = set(merged.getBestCmap().keys())
         merged.close()
+        missing = sorted(chr(c) for c in use_cps if c not in cmap)
         size = os.path.getsize(out_path)
         total += size
-        print("%s：合并后 %d 个字，%d KB" % (weight, glyphs, size // 1024))
+        print("%s：目标 %d 字，字体含 %d 字，%d KB%s"
+              % (weight, len(use_cps), len(cmap & use_cps), size // 1024,
+                 "（缺 %s）" % "".join(missing) if missing else ""))
         css.append(
             "@font-face{font-family:MiSans;font-style:normal;font-weight:%d;font-display:fallback;"
             "src:local('MiSans'),url('%s') format('woff2');}" % (css_weight, out_name)

@@ -26,8 +26,14 @@ dist/                 生成结果，不入库；部署上传的就是这个目�
 
 页面不依赖系统字体，字体随页面上线，所有设备看到的字形都与设计稿一致：
 
-- `assets/fonts/` 里是 **MiSans 精简子集**：`misans-regular.woff2` + `misans-medium.woff2`
-  两个文件（417 字，53KB + 54KB）+ 0.5KB 的 `misans.css`。**每字重只发 1 个请求。**
+- `assets/fonts/` 里是 **MiSans 精简子集**：`misans-regular.woff2`（57KB，正文全部用字）
+  \+ `misans-medium.woff2`（**9KB**，只含 500 字重标题用到的 69 字）+ 0.5KB 的 `misans.css`。
+  **每字重只发 1 个请求，合计约 67KB。**
+- Medium 之所以能这么小：模板里只有 `.main-title` / `.section-title` / `.faq-title` 是
+  `font-weight:500`，其余（页面大标题、功能标题、步骤标题、正文、清单、FAQ 问答）都是 400，
+  脚本按这两类文案分别裁剪。给 500 字重的元素加新文案后重跑脚本即可自动纳入。
+- `font-display:fallback`：最多 ~100ms 阻塞，字体 3 秒内到达才切换，超时保持系统字体，
+  避免慢网络下"整篇换字形"闪一下。
 - 为什么不是官方那套分片：官方分片是 32 个文件，PC 端（没装 MiSans）每个分片一个来回，
   实测单页 16 个字体请求、每个 1~1.9 秒，整页拖到 7.2 秒。合并后字体请求 16 → 2。
 - 生成方式 `python tools/build_font.py`：先按页面用到的字符裁剪分片，再把 **CFF 轮廓转成 glyf**
