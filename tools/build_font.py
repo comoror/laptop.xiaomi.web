@@ -96,6 +96,86 @@ def compress(codes):
     return ",".join(out)
 
 
+def otf_to_ttf(font, max_err=1.0):
+    """CFF 轮廓转成 TrueType(glyf) 轮廓。
+
+    MiSans 的分片是 CID-keyed CFF，fontTools 不支持合并这种表；
+    转成 glyf 后就能把几十个分片合成一个文件（体积会变大，但请求数从 30+ 降到 2）。
+    """
+    from fontTools.ttLib import newTable
+    from fontTools.pens.cu2quPen import Cu2QuPen
+    from fontTools.pens.ttGlyphPen import TTGlyphPen
+
+    order = font.getGlyphOrder()
+    glyph_set = font.getGlyphSet()
+    glyf = newTable("glyf")
+    glyf.glyphOrder = order
+    glyf.glyphs = {}
+    for name in order:
+        pen = TTGlyphPen(glyph_set)
+        glyph_set[name].draw(Cu2QuPen(pen, max_err, reverse_direction=True))
+        glyf.glyphs[name] = pen.glyph()
+    font["glyf"] = glyf
+    font["loca"] = newTable("loca")
+    glyf.compile(font)                      # 顺带算出 maxPoints / maxContours
+    maxp = font["maxp"]
+    maxp.tableVersion = 0x00010000
+    maxp.numGlyphs = len(order)
+    maxp.maxZones = 1
+    for attr in ("maxTwilightPoints", "maxStorage", "maxFunctionDefs", "maxInstructionDefs",
+                 "maxStackElements", "maxSizeOfInstructions", "maxComponentElements",
+                 "maxComponentDepth"):
+        if getattr(maxp, attr, None) is None:
+            setattr(maxp, attr, 0)
+    for tag in ("CFF ", "VORG"):
+        if tag in font:
+            del font[tag]
+    if "post" in font:
+        font["post"].formatType = 3.0   # 不存字形名，体积更小
+    font.sfntVersion = "\x00\x01\x00\x00"
+    return font
+
+
+def build_merged(weight, cps, need_idx, by_index, Options, Subsetter, TTFont):
+    """把一个字重的所有分片：子集化 → 转 glyf → 合并成一个字体。
+
+    Merger 只接受文件路径，所以每片先落到 pieces/ 再合并。
+    """
+    from fontTools.merge import Merger
+
+    pieces_dir = os.path.join(CACHE_DIR, "pieces")
+    os.makedirs(pieces_dir, exist_ok=True)
+    for f in glob.glob(os.path.join(pieces_dir, "%s-*.ttf" % weight)):
+        os.remove(f)
+
+    pieces = []
+    for idx in sorted(need_idx):
+        rel = by_index.get(str(idx), {}).get(weight)
+        if not rel:
+            continue
+        src = fetch(CDN + rel, os.path.join(CACHE_DIR, os.path.basename(rel)))
+        font = TTFont(src, lazy=True)
+        have = set(font.getBestCmap().keys()) & cps
+        font.close()
+        if not have:
+            continue
+        font = TTFont(src)
+        opts = Options()
+        opts.layout_features = ["*"]
+        opts.name_IDs = ["*"]
+        opts.notdef_outline = True
+        opts.drop_tables += ["DSIG"]
+        subsetter = Subsetter(options=opts)
+        subsetter.populate(unicodes=sorted(have))
+        subsetter.subset(font)
+        piece = os.path.join(pieces_dir, "%s-%s.ttf" % (weight, idx))
+        otf_to_ttf(font).save(piece)
+        pieces.append(piece)
+    if not pieces:
+        return None
+    return Merger().merge(pieces)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--refresh", action="store_true", help="忽略缓存重新下载分片")
@@ -122,7 +202,7 @@ def main():
                 need_idx.add(idx)
     uncovered = sorted(chr(c) for c in cps
                        if not any(c in r for r in slices.values()))
-    print("需要分片：%s" % sorted(need_idx))
+    print("涉及分片：%s" % sorted(need_idx))
     if uncovered:
         print("注意：MiSans SC 未覆盖 %d 个字符，将回退系统字体：%s"
               % (len(uncovered), "".join(uncovered)))
@@ -141,47 +221,30 @@ def main():
                 by_index.setdefault(idx, {})[weight] = name
 
     os.makedirs(FONTS_DIR, exist_ok=True)
-    for f in glob.glob(os.path.join(FONTS_DIR, "misans-*.woff2")):
-        os.remove(f)
+    for f in glob.glob(os.path.join(FONTS_DIR, "misans-*")):
+        if f.endswith((".woff2", ".css")):
+            os.remove(f)
 
-    rules, total, files_written = [], 0, 0
-    for weight, css_weight in WEIGHTS:
-        for idx in sorted(need_idx):
-            rel = by_index.get(str(idx), {}).get(weight)
-            if not rel:
-                continue
-            src = fetch(CDN + rel, os.path.join(CACHE_DIR, os.path.basename(rel)))
-            font = TTFont(src, lazy=True)
-            have = set(font.getBestCmap().keys()) & cps
-            font.close()
-            if not have:
-                continue
-            font = TTFont(src)
-            opts = Options()
-            opts.layout_features = ["*"]
-            opts.name_IDs = ["*"]
-            opts.notdef_outline = True
-            opts.drop_tables += ["DSIG"]
-            subsetter = Subsetter(options=opts)
-            subsetter.populate(unicodes=sorted(have))
-            subsetter.subset(font)
-            out_name = "misans-%s-%s.woff2" % (weight.lower(), idx)
-            out_path = os.path.join(FONTS_DIR, out_name)
-            font.flavor = "woff2"
-            font.save(out_path)
-            font.close()
-            size = os.path.getsize(out_path)
-            total += size
-            files_written += 1
-            rules.append((css_weight, out_name, compress(have)))
-
-    css = ["/* MiSans（小米官方字体）子集，仅含本套页面用到的字符。",
+    css = ["/* MiSans（小米官方字体）子集：先按本套页面用到的字符裁剪，",
+           "   再把几十个分片合并成每字重一个文件（请求数 30+ → 2）。",
            "   重新生成：python tools/build_font.py */"]
-    for css_weight, name, rng in rules:
+    total = 0
+    for weight, css_weight in WEIGHTS:
+        merged = build_merged(weight, cps, need_idx, by_index, Options, Subsetter, TTFont)
+        if merged is None:
+            sys.exit("没有可用的 MiSans %s 分片" % weight)
+        out_name = "misans-%s.woff2" % weight.lower()
+        out_path = os.path.join(FONTS_DIR, out_name)
+        merged.flavor = "woff2"
+        merged.save(out_path)
+        glyphs = len(merged.getBestCmap())
+        merged.close()
+        size = os.path.getsize(out_path)
+        total += size
+        print("%s：合并后 %d 个字，%d KB" % (weight, glyphs, size // 1024))
         css.append(
             "@font-face{font-family:MiSans;font-style:normal;font-weight:%d;font-display:swap;"
-            "src:local('MiSans'),url('%s') format('woff2');unicode-range:%s;}"
-            % (css_weight, name, rng)
+            "src:local('MiSans'),url('%s') format('woff2');}" % (css_weight, out_name)
         )
     open(os.path.join(FONTS_DIR, "misans.css"), "w", encoding="utf-8").write("\n".join(css) + "\n")
 
@@ -192,7 +255,7 @@ def main():
         except Exception as exc:  # 授权文件拿不到不影响使用
             print("授权文件下载失败：%s" % exc)
 
-    print("完成：%d 个 woff2，共 %d KB；misans.css 已更新" % (files_written, total // 1024))
+    print("完成：2 个 woff2，共 %d KB；misans.css 已更新" % (total // 1024))
     if uncovered:
         print("提醒：如上面列出的字符需要与设计稿完全一致，请联系设计补充或改用其他字体。")
 

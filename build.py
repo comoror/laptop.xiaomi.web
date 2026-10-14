@@ -349,6 +349,13 @@ def main():
     shutil.copytree(FONTS_DIR, font_out)
     print("copied %d font files -> dist/fonts/" % len(list(font_out.iterdir())))
 
+    # 站点图标：没有它浏览器会去请求 /favicon.ico，而 SPA 回退会返回整页 HTML（白白多一次请求）
+    for name in ("favicon.ico", "favicon.svg", "favicon.png"):
+        src = ASSETS_DIR.parent / name
+        if src.exists():
+            shutil.copyfile(src, DIST_DIR / name)
+    print("copied favicon.ico / favicon.svg / favicon.png -> dist/")
+
     # 静态资源缓存头（Cloudflare 支持 dist/_headers）。
     # HTML 保持默认的 must-revalidate（改文案立刻生效），图片/字体缓存一天，
     # 省掉手机端每次进页面都要重新校验 36 张图的往返。

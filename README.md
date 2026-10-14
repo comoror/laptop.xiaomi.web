@@ -26,17 +26,24 @@ dist/                 生成结果，不入库；部署上传的就是这个目�
 
 页面不依赖系统字体，字体随页面上线，所有设备看到的字形都与设计稿一致：
 
-- `assets/fonts/` 里是 **MiSans 精简子集**：32 个 woff2 分片 + `misans.css`（`@font-face` +
-  `unicode-range`），总共约 130KB，只覆盖本套页面用到的 380 个字。
-- 模板 `<head>` 里 `<link rel="stylesheet" href="fonts/misans.css">`，
-  `font-family` 第一位是 `"MiSans"`，后面才是 `-apple-system / PingFang SC / Microsoft YaHei`
-  等系统字体（兜底）。`src` 里带 `local('MiSans')`，小米设备已内置 MiSans，不会再下载。
+- `assets/fonts/` 里是 **MiSans 精简子集**：`misans-regular.woff2` + `misans-medium.woff2`
+  两个文件（417 字，53KB + 54KB）+ 0.5KB 的 `misans.css`。**每字重只发 1 个请求。**
+- 为什么不是官方那套分片：官方分片是 32 个文件，PC 端（没装 MiSans）每个分片一个来回，
+  实测单页 16 个字体请求、每个 1~1.9 秒，整页拖到 7.2 秒。合并后字体请求 16 → 2。
+- 生成方式 `python tools/build_font.py`：先按页面用到的字符裁剪分片，再把 **CFF 轮廓转成 glyf**
+  后合并——MiSans 分片是 CID-keyed CFF，fontTools 不支持直接合并，必须先转换
+  （cu2qu，误差 1/1000 em，实测字形、断行与设计稿一致）。
+- 模板 `<head>` 里 link 字体 CSS，`font-family` 第一位是 `"MiSans"`，后面才是
+  `-apple-system / PingFang SC / Microsoft YaHei` 等系统字体兜底；
+  `src` 带 `local('MiSans')`，小米设备已内置 MiSans，不会再下载。
 - **改了文案、加了新字要重跑**：`python tools/build_font.py`
-  （需要 `pip install fonttools brotli`；脚本会列出新增分片和 MiSans 未覆盖的字符）。
+  （需要 `pip install fonttools brotli`；脚本会列出涉及的分片和 MiSans 未覆盖的字符）。
   不重跑也不会报错，只是新字会回退到系统字体。
 - 已知：MiSans SC 的分片里没有 `？`（U+FF1F）和 `∘`（U+2218），这两个字符由系统字体兜底，
   实测与设计稿观感一致。
 - 授权：MiSans 为小米官方免费商用字体，`assets/fonts/MiSans-LICENSE.txt` 为随包授权文件。
+- 站点图标：`assets/favicon.svg` / `favicon.ico` / `favicon.png`（临时图标，可直接替换）。
+  没有它浏览器会去请求 `/favicon.ico`，而 SPA 回退会返回整页 HTML，白耗一次请求。
 
 ## 日常工作流
 
