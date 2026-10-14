@@ -101,6 +101,9 @@ def webp_size(path):
 def render_figures(figures):
     """图片列表 → <figure> 片段（图注渲染在卡片内部，见模板 CSS）。
 
+    图片包一层 <a class="zoom" href="图片地址">：
+    - 有 JS 时点一下进页内灯箱（再点一下回到原页面，双指可缩放）
+    - 没 JS / JS 被拦时退回浏览器默认行为，直接打开原图
     不写 loading="lazy"：图片已经是 WebP（全站 840KB），直接加载更稳，
     部分手机自带浏览器的懒加载实现会把图一直挂着不加载。
     """
@@ -110,9 +113,10 @@ def render_figures(figures):
         size = webp_size(ASSETS_DIR / fig["img"])
         dims = ' width="%d" height="%d"' % size if size else ""
         out.append(
-            '<figure><img src="images/%s" alt="%s"%s decoding="async">'
+            '<figure><a class="zoom" href="images/%s" aria-label="%s">'
+            '<img src="images/%s" alt="%s"%s decoding="async"></a>'
             "<figcaption>%s</figcaption></figure>"
-            % (fig["img"], esc(caption), dims, esc(caption))
+            % (fig["img"], esc(caption), fig["img"], esc(caption), dims, esc(caption))
         )
     return "\n".join(out)
 
