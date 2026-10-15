@@ -42,7 +42,10 @@
 
 /* ========== 基础样式（设计稿 2x：全部尺寸 = calc(1568 * var(--s)) 设计稿 ÷ 2） ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* 页面本身只允许滚动：双指落屏不会让整页乱跳（浏览器原生缩放被关掉）。
+   点开图片后由 JS 把 html 的 touch-action 临时切成 manipulation，灯箱里可双指缩放和拖动。
+   注意 touch-action 在祖先链上取交集，所以必须切在 html 上，不能只写灯箱里的图片。 */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-x pan-y; }
 body {
   background: var(--bg);
   color: var(--title);
@@ -212,12 +215,14 @@ a:active { opacity: 0.6; }
     pic.src = a.getAttribute('href');
     pic.alt = thumb ? thumb.alt : '';
     box.hidden = false;
-    root.style.overflow = 'hidden';   // 锁住背景滚动
+    root.style.overflow = 'hidden';     // 锁住背景滚动
+    root.style.touchAction = 'manipulation';   // 灯箱里放开双指缩放与拖动（不放开双击缩放）
   }
   function close() {
     box.hidden = true;
     pic.removeAttribute('src');
     root.style.overflow = '';
+    root.style.touchAction = '';        // 回到页面：只允许滚动
   }
   document.addEventListener('click', function (e) {
     var a = e.target.closest ? e.target.closest('a.zoom') : null;
