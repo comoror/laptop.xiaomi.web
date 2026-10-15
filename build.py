@@ -110,9 +110,8 @@ def webp_size(path):
 def render_figures(figures):
     """图片列表 → <figure> 片段（灰框包图片，图注在灰框下方，见模板 CSS）。
 
-    图片包一层 <a class="zoom" href="图片地址">：
-    - 有 JS 时点一下进页内灯箱（再点一下回到原页面，双指可缩放）
-    - 没 JS / JS 被拦时退回浏览器默认行为，直接打开原图
+    图片不可点击：外面只包一层 <div class="shot">，它负责灰底/圆角/裁切，
+    不放 <a>，也不挂任何 JS。看细节靠用户自己双指缩放页面（若设备允许）。
 
     懒加载策略：前 EAGER_FIGURES 张直接加载（保证首屏一定有图），其余 loading="lazy"。
     全站图片虽有 840KB，但 remote_control 一页就 416KB，全部预加载会让手机端首屏明显变慢。
@@ -126,10 +125,10 @@ def render_figures(figures):
         lazy = "" if _fig_index < EAGER_FIGURES else ' loading="lazy"'
         _fig_index += 1
         out.append(
-            '<figure><a class="zoom" href="images/%s" aria-label="%s">'
-            '<img src="images/%s" alt="%s"%s decoding="async"%s></a>'
+            '<figure><div class="shot">'
+            '<img src="images/%s" alt="%s"%s decoding="async"%s></div>'
             "<figcaption>%s</figcaption></figure>"
-            % (fig["img"], esc(caption), fig["img"], esc(caption), dims, lazy, esc(caption))
+            % (fig["img"], esc(caption), dims, lazy, esc(caption))
         )
     return "\n".join(out)
 

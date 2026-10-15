@@ -43,8 +43,7 @@
 /* ========== 基础样式（设计稿 2x：全部尺寸 = calc(1568 * var(--s)) 设计稿 ÷ 2） ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 /* 页面本身只允许滚动：双指落屏不会让整页乱跳（浏览器原生缩放被关掉）。
-   点开图片后由 JS 把 html 的 touch-action 临时切成 manipulation，灯箱里可双指缩放和拖动。
-   注意 touch-action 在祖先链上取交集，所以必须切在 html 上，不能只写灯箱里的图片。 */
+   touch-action 在祖先链取交集，所以必须写在 html 上。 */
 /* 显式给 html 也上背景：body 的背景虽然会传递到画布，但内嵌 WebView 的
    回弹区/安全区偶尔会露出一层，写死更稳。 */
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-x pan-y; background: var(--bg); }
@@ -112,8 +111,9 @@ figure img {
   height: auto;
   margin: calc(-16 * var(--s)) 0;
 }
-/* 图片外层链接：既是灯箱入口，也是那个灰色圆角卡片本身 */
-figure > a.zoom {
+/* 图片外层容器：就是那个灰色圆角卡片，负责灰底 / 圆角 / 上下裁切。
+   图片不可点击，所以这里不是 <a>，也没有任何点击行为。 */
+figure > .shot {
   display: block;
   -webkit-tap-highlight-color: transparent;
   border-radius: calc(24 * var(--s));
@@ -162,83 +162,11 @@ a:active { opacity: 0.6; }
 .index-card-title { display: block; font-size: calc(30 * var(--s)); line-height: calc(42 * var(--s)); color: var(--link); }
 .index-card-desc { display: block; margin-top: calc(4 * var(--s)); font-size: calc(24 * var(--s)); line-height: calc(36 * var(--s)); color: var(--caption); }
 
-/* ========== 看图灯箱：点图片全屏看大图，再点一下回到页面 ========== */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.92);
-  -webkit-tap-highlight-color: transparent;
-}
-.lightbox[hidden] { display: none; }
-.lightbox img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-}
-.lightbox-hint {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(28 * var(--s));
-  font-size: calc(22 * var(--s));
-  line-height: calc(30 * var(--s));
-  color: rgba(255, 255, 255, 0.55);
-  text-align: center;
-  pointer-events: none;
-}
 </style>
 </head>
 <body>
 <main class="page">
 {{BODY}}
 </main>
-<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="查看大图">
-  <img alt="">
-  <p class="lightbox-hint">双指缩放 · 轻点任意位置返回</p>
-</div>
-<script>
-/* 看图灯箱：点图片全屏显示，再点一下（或按 Esc）回到原页面。
-   没有 JS 时 <a href="图片地址"> 会退回浏览器默认行为，直接打开原图。 */
-(function () {
-  var box = document.getElementById('lightbox');
-  if (!box) return;
-  var pic = box.querySelector('img');
-  var root = document.documentElement;
-
-  function open(a) {
-    var thumb = a.querySelector('img');
-    pic.src = a.getAttribute('href');
-    pic.alt = thumb ? thumb.alt : '';
-    box.hidden = false;
-    root.style.overflow = 'hidden';     // 锁住背景滚动
-    root.style.touchAction = 'manipulation';   // 灯箱里放开双指缩放与拖动（不放开双击缩放）
-  }
-  function close() {
-    box.hidden = true;
-    pic.removeAttribute('src');
-    root.style.overflow = '';
-    root.style.touchAction = '';        // 回到页面：只允许滚动
-  }
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('a.zoom') : null;
-    if (a) {                       // 点缩略图：进灯箱（同一个点击不再触发关闭）
-      e.preventDefault();
-      open(a);
-      return;
-    }
-    if (!box.hidden) close();      // 灯箱里点任意位置：返回
-  }, false);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !box.hidden) close();
-  }, false);
-})();
-</script>
 </body>
 </html>
