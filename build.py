@@ -294,26 +294,47 @@ def page_display_title(page_data):
     return ""
 
 
+INDEX_TITLE = "米家笔记本插件使用指南"
+INDEX_INTRO = "本指南介绍如何用手机或平板控制笔记本电脑、管理笔记本文件，以及米家笔记本插件的智能玩法。"
+
+
+def index_description(page_data):
+    """目录页每条的说明文字：取该页的主标题（问句式标题）。"""
+    if page_data.get("main_title"):
+        return page_data["main_title"]
+    for block in page_data.get("blocks", []):
+        if block.get("type") == "main_title":
+            return block["text"]
+    return ""
+
+
 def render_index():
-    """测试索引页：列出全部页面入口（标题自动取自 i18n，保持同步）。"""
+    """指南目录页：按语言分组列出全部页面（标题取自 i18n，保持同步）。"""
     cache = {
         lang: json.loads((I18N_DIR / ("%s.json" % lang)).read_text(encoding="utf-8"))
         for lang in set(p[1] for p in PAGES)
     }
-    items = []
-    for page_key, lang, out_name in PAGES:
-        title = page_display_title(cache[lang][page_key])
-        suffix = "（中文）" if lang == "zh" else " (English)"
-        items.append(
-            '<li><a href="%s">%s</a></li>' % (out_name, esc(title + suffix))
+    out = [
+        '<h1 class="page-title index-title">%s</h1>' % esc(INDEX_TITLE),
+        '<p class="index-intro">%s</p>' % esc(INDEX_INTRO),
+    ]
+    for lang, heading in (("zh", "中文指南"), ("en", "English Guide")):
+        items = []
+        for page_key, page_lang, out_name in PAGES:
+            if page_lang != lang:
+                continue
+            page_data = cache[lang][page_key]
+            items.append(
+                '<li><a class="index-card" href="%s">'
+                '<span class="index-card-title">%s</span>'
+                '<span class="index-card-desc">%s</span></a></li>'
+                % (out_name, esc(page_display_title(page_data)), esc(index_description(page_data)))
+            )
+        out.append(
+            '<section class="index-section"><h2 class="section-title">%s</h2>'
+            '<ul class="index-list">%s</ul></section>' % (esc(heading), "\n".join(items))
         )
-    return (
-        '<h1 class="page-title">laptop.xiaomi.web</h1>'
-        '<h2 class="main-title">页面索引 / Page Index</h2>'
-        '<ul class="index-list">%s</ul>'
-        '<p class="index-note">开发测试用入口页；正式使用时插件直接跳转到具体页面，'
-        "此页不会被用户看到。</p>" % "\n".join(items)
-    )
+    return "\n".join(out)
 
 
 def main():
@@ -343,10 +364,10 @@ def main():
         out_path.write_text(html, encoding="utf-8")
         print("generated dist/%s" % out_name)
 
-    # 测试索引页：访问站点根路径时的入口
+    # 指南目录页：访问站点根路径时的入口
     index_html = (
         template.replace("{{LANG}}", "zh-CN")
-        .replace("{{TITLE}}", esc("页面索引 - laptop.xiaomi.web"))
+        .replace("{{TITLE}}", esc(INDEX_TITLE))
         .replace("{{BODY}}", render_index())
     )
     (DIST_DIR / "index.html").write_text(index_html, encoding="utf-8")

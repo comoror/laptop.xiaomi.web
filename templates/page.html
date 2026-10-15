@@ -143,10 +143,17 @@ a { color: var(--link); text-decoration: none; }
 a:active { opacity: 0.6; }
 .hl { color: var(--link); }
 
-/* 测试索引页（index.html，开发测试用入口） */
-.index-list { margin-top: 40px; }
-.index-list li { list-style: none; margin-bottom: 36px; font-size: 30px; line-height: 42px; }
-.index-note { margin-top: 60px; font-size: 24px; line-height: 36px; color: var(--caption); }
+/* 指南目录页（index.html） */
+.index-title { font-size: 52px; }
+.index-intro { margin: -12px 0 72px; font-size: 28px; line-height: 42px; color: var(--sub); }
+.index-section { margin-bottom: 76px; }
+.index-section .section-title { margin: 0 0 28px; }
+.index-list { margin: 0; padding: 0; }
+.index-list li { list-style: none; margin-bottom: 20px; }
+.index-list li:last-child { margin-bottom: 0; }
+.index-card { display: block; padding: 30px 32px; background: var(--img-bg); border-radius: 24px; }
+.index-card-title { display: block; font-size: 30px; line-height: 42px; color: var(--link); }
+.index-card-desc { display: block; margin-top: 4px; font-size: 24px; line-height: 36px; color: var(--caption); }
 
 /* ========== 看图灯箱：点图片全屏看大图，再点一下回到页面 ========== */
 .lightbox {
