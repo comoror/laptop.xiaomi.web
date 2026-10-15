@@ -28,13 +28,13 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #252b2e;
+    --bg: #000000;                       /* 跟米家 App 暗色背景一致：纯黑 */
     --title: #ffffff;
     --heading: #ffffff;
     --sub: #b3b3b3;
     --body: rgba(255, 255, 255, 0.6);
-    --caption: #9e9e9e;
-    --img-bg: #1e2427;
+    --caption: #8c8c8c;
+    --img-bg: #141414;                   /* 卡片：在纯黑上略微抬起一档 */
     --divider: rgba(255, 255, 255, 0.15);
     --link: #00B884;
   }
@@ -45,7 +45,9 @@
 /* 页面本身只允许滚动：双指落屏不会让整页乱跳（浏览器原生缩放被关掉）。
    点开图片后由 JS 把 html 的 touch-action 临时切成 manipulation，灯箱里可双指缩放和拖动。
    注意 touch-action 在祖先链上取交集，所以必须切在 html 上，不能只写灯箱里的图片。 */
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-x pan-y; }
+/* 显式给 html 也上背景：body 的背景虽然会传递到画布，但内嵌 WebView 的
+   回弹区/安全区偶尔会露出一层，写死更稳。 */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-x pan-y; background: var(--bg); }
 body {
   background: var(--bg);
   color: var(--title);
