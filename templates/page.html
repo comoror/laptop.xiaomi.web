@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <!-- 设计稿（1568px 宽的 392pt 手机稿）按 2x 落 CSS：页面逻辑宽度 784，手机上由系统按比例缩放显示 -->
-<meta name="viewport" content="width=784,viewport-fit=cover">
+<meta name="viewport" content="width=784,user-scalable=no,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>{{TITLE}}</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -42,14 +42,20 @@
 
 /* ========== 基础样式（设计稿 2x：全部尺寸 = calc(1568 * var(--s)) 设计稿 ÷ 2） ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-/* 页面本身只允许滚动：双指落屏不会让整页乱跳（浏览器原生缩放被关掉）。
-   touch-action 在祖先链取交集，所以必须写在 html 上。 */
+/* 页面只允许纵向滚动：横向手势一律不交给浏览器。
+   早期写的是 pan-x pan-y，它仍然放行横向平移——WebView 里视觉视口比布局视口宽出
+   几 px 时就能左右挪动一点，而 overflow-x 管不到这种"视觉视口平移"。
+   配合 viewport 里的 user-scalable=no 一起挡住缩放引起的视口漂移。
+   （touch-action 在祖先链取交集，所以必须写在 html 上。） */
 /* 显式给 html 也上背景：body 的背景虽然会传递到画布，但内嵌 WebView 的
    回弹区/安全区偶尔会露出一层，写死更稳。 */
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-x pan-y; background: var(--bg); }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-y; background: var(--bg); }
 body {
   background: var(--bg);
   color: var(--title);
+  /* 兜底：万一将来有元素比视口宽（--s 按 100vw 算，而 vw 含滚动条宽度），
+     这里把横向溢出裁掉，避免出现横向滚动条。只会吃掉右侧留白。 */
+  overflow-x: hidden;
   /* 只用系统字体，不下载任何字体文件：
      小米/HyperOS 设备自带 MiSans，命中第一项即与设计稿一致；
      其它设备依次落到苹方（iOS）、HarmonyOS Sans（华为）、微软雅黑（Windows）、
