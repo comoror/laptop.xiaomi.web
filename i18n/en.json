@@ -141,7 +141,8 @@
       {
         "id": "step3",
         "num": "3",
-        "title": "You can manage your laptop files just like on your phone or tablet"
+        "title": "You can manage your laptop files just like on your phone or tablet",
+        "final": true
       }
     ],
     "faq": {
@@ -241,7 +242,8 @@
         "type": "step",
         "id": "step3",
         "num": "3",
-        "title": "You can manage your laptop files just like on your phone or tablet"
+        "title": "You can manage your laptop files just like on your phone or tablet",
+        "final": true
       }
     ]
   }

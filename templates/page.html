@@ -21,6 +21,10 @@
   --img-bg: #f7f7f7;       /* 图片卡片底色 */
   --divider: #e6e6e6;
   --link: #00B884;
+  /* 设计像素 → 视口像素：视口≥784 时恒为 1px（与设计稿 1:1），
+     更窄时整体等比缩小（内嵌 WebView 不认 viewport meta 的兜底）。 */
+  --s: 1px;
+  --s: min(1px, calc(100vw / 784));
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -36,7 +40,7 @@
   }
 }
 
-/* ========== 基础样式（设计稿 2x：全部尺寸 = 1568px 设计稿 ÷ 2） ========== */
+/* ========== 基础样式（设计稿 2x：全部尺寸 = calc(1568 * var(--s)) 设计稿 ÷ 2） ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
@@ -53,90 +57,88 @@ body {
   line-height: 1.4;
 }
 .page {
-  max-width: 784px;
+  max-width: calc(784 * var(--s));
   margin: 0 auto;
-  padding: 52px 52px 116px;
+  padding: calc(52 * var(--s)) calc(52 * var(--s)) calc(116 * var(--s));
 }
 
 /* 标题 */
-.page-title   { font-size: 64px; font-weight: 400; line-height: 1.2; margin-bottom: 108px; }
-.main-title   { font-size: 40px; font-weight: 500; line-height: 56px; margin-bottom: 44px; color: var(--heading); }
-.main-title.break { margin-top: 176px; }   /* 智能玩法页里的跨板块大间隔 */
-.section-title{ font-size: 40px; font-weight: 500; line-height: 56px; margin: 0 0 48px; color: var(--heading); }
+.page-title   { font-size: calc(64 * var(--s)); font-weight: 400; line-height: calc(84.8 * var(--s)); margin-bottom: calc(108 * var(--s)); }   /* 设计稿 32/42.4 */
+.main-title   { font-size: calc(40 * var(--s)); font-weight: 500; line-height: calc(53 * var(--s)); margin-bottom: calc(44 * var(--s)); color: var(--heading); margin-right: calc(-80 * var(--s)); }   /* 设计稿 20/26.5，文本框宽 380（比内容列 340 宽 40）→ 页面放宽到 760 保证一行 */
+.main-title.break { margin-top: calc(176 * var(--s)); }   /* 智能玩法页里的跨板块大间隔 */
+.section-title{ font-size: calc(40 * var(--s)); font-weight: 500; line-height: calc(53 * var(--s)); margin: 0 0 calc(48 * var(--s)); color: var(--heading); }   /* 设计稿 20/26.5 */
 /* 智能玩法页：设备要求之后直接接小节标题，需要设计稿里那段大间距 */
-.requirement + .section-title { margin-top: 160px; }
+.requirement + .section-title { margin-top: calc(160 * var(--s)); }
 
 /* 说明文字 / 清单 */
-.body-text    { font-size: 28px; line-height: 38px; color: var(--sub); margin-bottom: 24px; }
-.requirement  { font-size: 28px; line-height: 38px; color: var(--sub); }
+.body-text    { font-size: calc(28 * var(--s)); line-height: calc(37.2 * var(--s)); color: var(--sub); margin-bottom: calc(24 * var(--s)); }
+.requirement  { font-size: calc(28 * var(--s)); line-height: calc(37.2 * var(--s)); color: var(--sub); }
 .model-list   { list-style: none; }
 .model-list li {
   position: relative;
-  padding-left: 38px;
-  font-size: 24px;
-  line-height: 40px;
+  padding-left: calc(38 * var(--s));
+  font-size: calc(24 * var(--s));
+  line-height: calc(40 * var(--s));
   color: var(--body);
 }
-.model-list li::before { content: "•"; position: absolute; left: 14px; color: var(--body); }
+.model-list li::before { content: "•"; position: absolute; left: calc(14 * var(--s)); color: var(--body); }
 
 /* 功能区 / 步骤区 */
 .feature      { margin-top: 0; }
-.feature + .feature .feature-title { margin-top: 64px; }
-.feature-title{ font-size: 28px; line-height: 38px; color: var(--sub); }
+.feature + .feature .feature-title { margin-top: calc(64 * var(--s)); }
+.feature-title{ font-size: calc(28 * var(--s)); line-height: calc(37.2 * var(--s)); color: var(--sub); }
 .step         { margin-bottom: 0; }
-.step-title   { font-size: 28px; line-height: 38px; color: var(--sub); margin: 80px 0 30px; }
+.step-title   { font-size: calc(28 * var(--s)); line-height: calc(37.2 * var(--s)); color: var(--sub); margin: calc(80 * var(--s)) 0 calc(30 * var(--s)); }   /* 设计稿 14/18.6 */
+.step-title.is-final,
+.feature-title.is-link { font-size: calc(30 * var(--s)); line-height: calc(40 * var(--s)); }   /* 设计稿：收尾/跳转那一行大一号 15/19.9 */
 /* 步骤标题紧跟小节标题时（file_manager / smart_play 的管理文件小节）不留上间距 */
 .section-title + .step .step-title,
 .section-title + .step-title { margin-top: 0; }
-.step-title .num { display: inline-block; width: 40px; }
-.step-text    { font-size: 24px; line-height: 40px; color: var(--body); }
+.step-title .num { display: inline-block; width: calc(40 * var(--s)); }
+.step-text    { font-size: calc(24 * var(--s)); line-height: calc(40 * var(--s)); color: var(--body); }
 
-/* 图片卡片：图片满宽居中裁切，图注在卡片内底部居中 */
+/* 图片卡片：灰框只包图片，图注放在灰框下方 —— 这样任何长度的图注都不会压到图上 */
 figure {
-  position: relative;
-  margin: 36px 0 50px;
-  border-radius: 24px;
-  background: var(--img-bg);
-  overflow: hidden;
+  margin: calc(36 * var(--s)) 0 calc(50 * var(--s));
 }
 figure img {
   display: block;
   width: 100%;
   height: auto;
-  margin: -16px 0;
+  margin: calc(-16 * var(--s)) 0;
 }
-/* 图片外层链接：点一下进灯箱看大图（不能影响图片自身的负边距布局） */
-figure > a.zoom { display: block; -webkit-tap-highlight-color: transparent; }
+/* 图片外层链接：既是灯箱入口，也是那个灰色圆角卡片本身 */
+figure > a.zoom {
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: calc(24 * var(--s));
+  background: var(--img-bg);
+  overflow: hidden;
+}
 figcaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px 8px;   /* 贴卡片底部固定下边距（不用百分比，避免高图压图注） */
-  font-size: 20px;
-  line-height: 32px;
+  margin-top: calc(16 * var(--s));
+  padding: 0 calc(20 * var(--s));
+  font-size: calc(20 * var(--s));   /* 设计稿 10/14（1x）→ 页面 20/28 */
+  line-height: calc(28 * var(--s));
   color: var(--caption);
   text-align: center;
 }
 
 /* 分割线 */
-.divider { border: none; height: 1px; background: var(--divider); margin: 92px 0; }
+.divider { border: none; height: calc(1 * var(--s)); background: var(--divider); margin: calc(92 * var(--s)) 0; }
 
 /* 常见问题 */
-.faq-title { font-size: 40px; font-weight: 500; line-height: 56px; margin-bottom: 48px; color: var(--heading); }
-.faq-item  { margin-top: 48px; }
-.faq-q     { font-size: 28px; line-height: 38px; color: var(--sub); margin-bottom: 22px; }
-.a-item    { display: flex; font-size: 24px; line-height: 44px; color: var(--body); }
-.a-item .mark { flex: none; margin-right: 14px; width: 24px; }
+.faq-title { font-size: calc(40 * var(--s)); font-weight: 500; line-height: calc(53 * var(--s)); margin-bottom: calc(48 * var(--s)); color: var(--heading); }
+.faq-item  { margin-top: calc(48 * var(--s)); }
+.faq-q     { font-size: calc(28 * var(--s)); line-height: calc(38 * var(--s)); color: var(--sub); margin-bottom: calc(22 * var(--s)); }
+.a-item    { display: flex; font-size: calc(24 * var(--s)); line-height: calc(44 * var(--s)); color: var(--body); }
+.a-item .mark { flex: none; margin-right: calc(14 * var(--s)); width: calc(24 * var(--s)); }
 .a-text    { flex: 1; min-width: 0; }
 /* 层级：bullet=•, check=∘, sub=次级•, letter=a./b./c., roman=i./ii., note=无标记说明行 */
-.lvl-bullet, .lvl-check { padding-left: 14px; }
-.lvl-sub, .lvl-letter, .lvl-note { padding-left: 32px; }
-.lvl-roman  { padding-left: 56px; }
-.lvl-note   { margin-top: 16px; }
+.lvl-bullet, .lvl-check { padding-left: calc(14 * var(--s)); }
+.lvl-sub, .lvl-letter, .lvl-note { padding-left: calc(32 * var(--s)); }
+.lvl-roman  { padding-left: calc(56 * var(--s)); }
+.lvl-note   { margin-top: calc(16 * var(--s)); }
 
 /* 链接（页内锚点 / 页面互跳 / 外链）与高亮文字 */
 a { color: var(--link); text-decoration: none; }
@@ -144,16 +146,16 @@ a:active { opacity: 0.6; }
 .hl { color: var(--link); }
 
 /* 指南目录页（index.html） */
-.index-title { font-size: 52px; }
-.index-intro { margin: -12px 0 72px; font-size: 28px; line-height: 42px; color: var(--sub); }
-.index-section { margin-bottom: 76px; }
-.index-section .section-title { margin: 0 0 28px; }
+.index-title { font-size: calc(52 * var(--s)); line-height: calc(69 * var(--s)); }   /* 与大标题同比例（52 × 1.325） */
+.index-intro { margin: calc(-12 * var(--s)) 0 calc(72 * var(--s)); font-size: calc(28 * var(--s)); line-height: calc(42 * var(--s)); color: var(--sub); }
+.index-section { margin-bottom: calc(76 * var(--s)); }
+.index-section .section-title { margin: 0 0 calc(28 * var(--s)); }
 .index-list { margin: 0; padding: 0; }
-.index-list li { list-style: none; margin-bottom: 20px; }
+.index-list li { list-style: none; margin-bottom: calc(20 * var(--s)); }
 .index-list li:last-child { margin-bottom: 0; }
-.index-card { display: block; padding: 30px 32px; background: var(--img-bg); border-radius: 24px; }
-.index-card-title { display: block; font-size: 30px; line-height: 42px; color: var(--link); }
-.index-card-desc { display: block; margin-top: 4px; font-size: 24px; line-height: 36px; color: var(--caption); }
+.index-card { display: block; padding: calc(30 * var(--s)) calc(32 * var(--s)); background: var(--img-bg); border-radius: calc(24 * var(--s)); }
+.index-card-title { display: block; font-size: calc(30 * var(--s)); line-height: calc(42 * var(--s)); color: var(--link); }
+.index-card-desc { display: block; margin-top: calc(4 * var(--s)); font-size: calc(24 * var(--s)); line-height: calc(36 * var(--s)); color: var(--caption); }
 
 /* ========== 看图灯箱：点图片全屏看大图，再点一下回到页面 ========== */
 .lightbox {
@@ -179,9 +181,9 @@ a:active { opacity: 0.6; }
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 28px;
-  font-size: 22px;
-  line-height: 30px;
+  bottom: calc(28 * var(--s));
+  font-size: calc(22 * var(--s));
+  line-height: calc(30 * var(--s));
   color: rgba(255, 255, 255, 0.55);
   text-align: center;
   pointer-events: none;

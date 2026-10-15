@@ -107,28 +107,8 @@ def webp_size(path):
     return None
 
 
-def caption_extra_padding(caption):
-    """图注超过 2 行时，给卡片补足高度，避免图注压到图片上。
-
-    卡片按设计稿只有 2 行图注的余量（图注高 32px/行 + 下边距 8px = 72px），
-    英文比中文长，个别图注会排到 3 行。这里按字符宽度估算行数，
-    多出来的高度加到 figure 的 padding-bottom（图注是贴底的绝对定位，
-    卡片变高它自然下移，不会压图）。
-    """
-    if not caption:
-        return 0
-    text_w = 680 - 40          # 卡片宽度 - 图注左右内边距
-    line_h = 32                # 图注行高
-    base = 2 * line_h + 8      # 设计稿允许的两行高度
-    cjk = sum(1 for ch in caption if ord(ch) > 0x2E80)
-    other = len(caption) - cjk
-    width = cjk * 20 + other * 10.4     # 20px 字体：汉字 1em，西文约 0.52em
-    lines = max(1, int(width / text_w) + (1 if width % text_w else 0))
-    return max(0, lines * line_h + 8 - base)
-
-
 def render_figures(figures):
-    """图片列表 → <figure> 片段（图注渲染在卡片内部，见模板 CSS）。
+    """图片列表 → <figure> 片段（灰框包图片，图注在灰框下方，见模板 CSS）。
 
     图片包一层 <a class="zoom" href="图片地址">：
     - 有 JS 时点一下进页内灯箱（再点一下回到原页面，双指可缩放）
@@ -145,13 +125,11 @@ def render_figures(figures):
         dims = ' width="%d" height="%d"' % size if size else ""
         lazy = "" if _fig_index < EAGER_FIGURES else ' loading="lazy"'
         _fig_index += 1
-        extra = caption_extra_padding(caption)
-        style = ' style="padding-bottom:%dpx"' % extra if extra else ""
         out.append(
-            '<figure%s><a class="zoom" href="images/%s" aria-label="%s">'
+            '<figure><a class="zoom" href="images/%s" aria-label="%s">'
             '<img src="images/%s" alt="%s"%s decoding="async"%s></a>'
             "<figcaption>%s</figcaption></figure>"
-            % (style, fig["img"], esc(caption), fig["img"], esc(caption), dims, lazy, esc(caption))
+            % (fig["img"], esc(caption), fig["img"], esc(caption), dims, lazy, esc(caption))
         )
     return "\n".join(out)
 
@@ -190,15 +168,20 @@ def render_step_title(step):
 
     step 既可以是 file_manager 的 steps 条目（title），
     也可以是 smart_play 的 step_title / step 区块（title 或 text）。
+
+    带 final:true 的步骤（收尾那一条，如"您可以像管理手机、平板的文件一样…"）
+    在设计稿里字号大一号，见模板 .step-title.is-final。
     """
     num = step.get("num")
     text = step.get("title", step.get("text", ""))
+    cls = "step-title is-final" if step.get("final") else "step-title"
     if num:
-        return '<div class="step-title"><span class="num">%s</span>%s</div>' % (
+        return '<div class="%s"><span class="num">%s</span>%s</div>' % (
+            cls,
             esc(num),
             fmt(text),
         )
-    return '<div class="step-title">%s</div>' % fmt(text)
+    return '<div class="%s">%s</div>' % (cls, fmt(text))
 
 
 def render_remote_control(data):
@@ -208,9 +191,11 @@ def render_remote_control(data):
         '<h2 class="main-title">%s</h2>' % fmt(data["main_title"]),
     ]
     for feat in data["features"]:
+        # 带链接的功能标题（功能4）在设计稿里字号大一号，见模板 .feature-title.is-link
+        cls = "feature-title is-link" if "[[" in feat["title"] else "feature-title"
         parts.append(
-            '<section class="feature"><div class="feature-title">%s</div>%s</section>'
-            % (fmt(feat["title"]), render_figures(feat.get("figures")))
+            '<section class="feature"><div class="%s">%s</div>%s</section>'
+            % (cls, fmt(feat["title"]), render_figures(feat.get("figures")))
         )
     parts.append('<hr class="divider">')
     parts.append(render_faq(data["faq"]))
