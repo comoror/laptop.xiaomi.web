@@ -1,187 +1,56 @@
 # laptop.xiaomi.web
 
 小米笔记本插件（xiaomi.laptop.p52）三个引导页的网页版：
-「控制笔记本」（远程控制）、「管理笔记本文件」与「智能玩法」，各含中/英两套，共 6 个静态 HTML。
-后期从插件 MainPage 直接跳转到本网页，网页内容独立维护、独立发布。
+**控制笔记本**、**管理笔记本文件**、**智能玩法**，各含中/英两套，共 6 个内容页 + 1 个索引页。
 
-版式以设计稿为唯一标准：1568px 宽的设计稿按 **2x** 落 CSS —— 页面逻辑宽度 784、
-左右留白 52、内容宽 680、大标题 64、主标题 40、正文 28、列表与步骤正文 24、图注 20、
-图片卡片 680×448、圆角 24。模板里的 viewport 写成 `width=784`，
-手机上由系统整体缩放显示，观感与设计稿一致；深色模式跟随系统。
+页面是纯 HTML + CSS（无 JS、无第三方依赖、不加载字体文件）：
+图片不可点击，页面不允许双指缩放和横向平移。
 
-## 目录结构
+## 在线地址
 
-```
-templates/page.html   页面模板（骨架 + 全部 CSS，文案位置由脚本注入）
-i18n/zh.json          全部中文文案（两个页面都在这一个文件里）
-i18n/en.json          全部英文文案
-assets/images/        页面用到的截图（WebP，带 alpha；源自设计稿导出的 1020px PNG）
-assets/fonts/         MiSans 网页字体子集 + misans.css（由 tools/build_font.py 生成）
-tools/build_font.py   字体子集生成脚本（可选，改文案加了新字才需要跑）
-build.py              生成脚本（纯 Python 标准库，无第三方依赖）
-dist/                 生成结果，不入库；部署上传的就是这个目录
-```
-
-## 字体：只用系统字体，不下载任何字体文件
-
-页面**不加载 webfont**。`font-family` 第一位是 `"MiSans"`：
-
-- **小米 / HyperOS 设备**：系统自带 MiSans，直接命中，字形与设计稿一致；
-- **其它设备**：依次落到苹方（iOS）、HarmonyOS Sans（华为）、微软雅黑（Windows）、
-  系统默认无衬线（Android 等）。
-
-为什么可以这么干：**中日韩字体每个汉字、全角标点都是固定 1em 宽**，所以换字体
-**不影响断行、居中、卡片尺寸、页面总高度**。实测同一页在「MiSans」与「系统字体（微软雅黑）」
-下渲染对比：文本块数量 28 vs 28，每块起始位置偏差 ≤ 6px（整页 15200px）。
-
-代价只是"字形长相"不同：
-
-| 平台 | 回退字体 | 差异 |
+| 环境 | 地址 | 更新方式 |
 |---|---|---|
-| 小米 / HyperOS | 系统即 MiSans | 无 |
-| iPhone / iPad | 苹方 PingFang SC | 字形略不同；苹方有 Medium，标题字重正常 |
-| Windows | 微软雅黑 | 字形不同；雅黑只有 400/700，`font-weight:500` 会落到 400（标题略轻，不会假加粗） |
-| 其他 Android | Roboto + Noto Sans CJK | 字形不同，断行一致 |
+| 测试版 | https://laptop.0310298.com/index.html | push 到 `main` 自动部署（Cloudflare） |
+| 正式版 | https://pc.mi.com/iot_help/index.html | 手动上传 `dist/` 下 7 个 HTML |
 
-**历史与备用方案**：曾经自托管 MiSans 子集（`tools/build_font.py` 从官方分片裁剪 + 合并，
-输出 2 个 woff2 共 67KB），为了彻底去掉字体网络请求已移除。需要恢复时：
-跑一次 `python tools/build_font.py`（需 `pip install fonttools brotli`），
-在模板 `<head>` 加回 `<link rel="stylesheet" href="fonts/misans.css">`，
-并在 `build.py` 里加回 `assets/fonts/` → `dist/fonts/` 的拷贝。
+## 日常维护
 
-站点图标：`assets/favicon.svg` / `favicon.ico` / `favicon.png`（临时图标，可直接替换）。
-没有它浏览器会去请求 `/favicon.ico`，而 SPA 回退会返回整页 HTML，白耗一次请求。
+改文案 → 生成 → 提交 → 部署：
 
-## 日常工作流
+```bash
+# 1. 改文案
+#    i18n/zh.json / i18n/en.json
 
-```
-1. 改文案：编辑 i18n/zh.json 或 i18n/en.json
-2. 本地生成：python build.py        （Cloudflare CI 上是 python3 build.py）
-   ※ 文案里出现了原来没有的汉字/符号时，先跑 python tools/build_font.py 补字体子集
-3. 本地预览：双击 dist/ 下的 html，浏览器 F12 → 切换手机视口查看
-   （页面按 784 逻辑宽度设计，手机上浏览器会整体缩放；桌面全屏看则接近设计稿 2 倍尺寸）
-4. 提交推送：git add . && git commit && git push
-5. 自动部署：Cloudflare Pages 自动构建并发布
+# 2. 生成到 dist/
+python build.py
+
+# 3. 预览
+#    双击 dist/ 下的 HTML，F12 切手机视口看
+
+# 4. 发布
+git push          # 自动部署到测试版 laptop.0310298.com
+#    正式版 pc.mi.com/iot_help/ 需手动上传 dist/ 下 7 个 HTML
 ```
 
-生成的 6 个页面：
+## 目录
 
 ```
-dist/remote_control.html        远程控制 · 中文
-dist/remote_control_en.html     远程控制 · English
-dist/file_manager.html          文件管理 · 中文
-dist/file_manager_en.html       文件管理 · English
-dist/smart_play.html            智能玩法 · 中文
-dist/smart_play_en.html         智能玩法 · English
-dist/index.html                 测试索引页（站点根入口，自动列出以上 6 页）
+templates/page.html   页面模板（含全部 CSS）
+i18n/                 中英文案
+assets/images/        截图（WebP，带透明边）
+assets/favicon.*      站点图标（临时图标，可替换官方）
+build.py              生成脚本（纯标准库）
+dist/                 生成结果，不入库
 ```
 
-## 文案在哪、怎么写
+## 几点要注意
 
-`i18n/zh.json` / `en.json` 里每个页面一个 key：`remote_control`、`file_manager`、`smart_play`。
+- **样式内联在每个 HTML 里**：改模板后 7 个页面全变，上传时 7 个都要替换。
+- **设计稿 1568px 宽按 2x 落 CSS**：页面逻辑宽度 784，尺寸统一写成 `calc(N * var(--s))`，
+  小屏等比缩小（兜住不认 viewport meta 的内嵌 WebView）。
+- **只用系统字体**：小米/HyperOS 命中 MiSans，其它平台回落苹方、雅黑、系统无衬线。
+- **暗色跟随系统**，背景纯黑 `#000`，与米家 App 暗色界面衔接。
+- **文案里的特殊写法**：`[[文字|链接]]` 跳转、`((文字))` 只上链接色。
 
-- `remote_control`：`page_title` / `main_title` / `features[]`（每项 `title` + 可选 `figures[]`）/ `faq`
-- `file_manager`：`page_title` / `main_title` / `requirement` / `section_title` /
-  `steps[]`（每项 `id`、可选 `num`、`title`、可选 `figures[]`）/ `faq`
-- `smart_play`：`blocks[]` 顺序拼装，区块类型见 build.py 的 `render_block()`：
-  `page_title` / `main_title`（可加 `"break": true` 表示跨板块大间隔）/ `section_title` /
-  `body_text` / `requirement` / `list`（`items[]`，机型清单）/
-  `step_title` / `step_text` / `figures` / `step`（`num` + `title` + `figures`）/ `divider`
-- `faq`：`title` + `items[]`（每项 `question` + `answers[]`）；
-  答案的 `level` 取 `bullet` / `check` / `sub` / `letter` / `roman` / `note`（`note` 为无标记说明行），
-  条目后可跟 `figures[]`；`letter`、`roman` 的序号（`a.` / `i.`）写在文案里。
-
-图片放在 `assets/images/`，JSON 里只写文件名（HTML 输出成 `images/xxx.webp`）。
-
-- 格式为 **WebP（quality 85，保留 alpha）**：截图的四边是透明的，要透出卡片的灰底，
-  所以不能拍平到白底。36 张共约 840KB；同内容 PNG 是 6.7MB，手机网络下会明显拖慢
-  甚至加载失败，这是换 WebP 的原因。
-- 尺寸 1020px 宽（卡片 680 CSS px 的 1.5 倍图）；拿到更高清的原图，同名覆盖即可，
-  不用改文案（原图素材在仓库外的 `米家插图/`）。
-- 懒加载：**前 2 张直接加载**（保证首屏一定有图），其余 `loading="lazy"`。
-  全站图片虽只有 840KB，但 remote_control 一页就 416KB，全部预加载会让手机首屏明显变慢。
-  若某些手机自带浏览器的懒加载不可靠导致图片不显示，把 `build.py` 里的
-  `EAGER_FIGURES` 调大即可（调成很大就等于全部直接加载）。
-- `<img>` 带 `width/height`，避免加载过程中页面跳动。
-- 构建会生成 `dist/_headers`：`/images/*`、`/fonts/*` 缓存一天，HTML 保持 `must-revalidate`
-  （改文案立刻生效）。
-
-## 点击看大图（灯箱）
-
-- 每张图外层是 `<a class="zoom" href="images/xxx.webp">`（由 `render_figures()` 生成）：
-  - **有 JS**：点一下进入页内全屏灯箱，再点任意位置（或按 Esc）回到原页面；
-  - **没 JS / JS 被拦**：退回浏览器默认行为，直接打开原图，行为不变。
-- 放大缩小走**系统原生手势**：viewport 是 `width=784` 且没有写 `user-scalable=no`，
-  所以双指缩放、双击放大在页面和灯箱里都可用，不需要自己实现手势。
-- 实现只有模板末尾约 30 行原生 JS + 一段 `.lightbox` 样式，**无任何第三方依赖**，
-  6 个页面共用（改模板即全站生效）。`build.py` 仍是纯标准库。
-
-## 文案里怎么写链接
-
-在 i18n JSON 的文案字符串中使用 `[[显示文字|目标地址]]`，build.py 会自动转成 `<a>` 标签：
-
-```
-页面互跳：[[使用平板和手机，管理笔记本文件|file_manager.html]]
-页内锚点：[[打开文件服务|#step1]]          （跳到 file_manager 页的步骤1）
-外部链接：[[HyperOS官网|https://hyperos.mi.com/]]
-```
-
-英文页的链接目标要带 `_en` 后缀（如 `remote_control_en.html`），中英页面互不串门。
-
-不需要跳转、只想让文字用链接色（设计稿里的高亮词，如「以下版本」）时，写成 `((显示文字))`，
-build.py 会输出 `<span class="hl">显示文字</span>`。
-
-## Cloudflare 部署配置（Workers 新版流程）
-
-Cloudflare 新版控制台将 Git 部署引导到 Workers（表单标题"设置您的应用程序"），
-静态目录由仓库根部的 `wrangler.jsonc` 指定（`assets.directory = ./dist`）。
-连接 GitHub 仓库后，表单填写：
-
-| 配置项 | 值 |
-|---|---|
-| 项目名称 | `laptop-xiaomi-web`（需与 wrangler.jsonc 中 name 一致） |
-| 构建命令 | `python3 build.py` |
-| 部署命令 | `npx wrangler deploy`（保持默认） |
-
-- `main` 分支 push → 自动部署到生产（在项目的 Custom domains / Domains 里绑定你自己的域名）
-- 其他分支 push → 自动生成独立预览地址，验收后再合并到 `main`
-
-若控制台仍是经典 Pages 流程：Framework preset 选 None，
-Build command `python3 build.py`，Build output directory 填 `dist`，效果相同。
-
-### 线上 URL 行为（由 wrangler.jsonc 决定）
-
-| 访问地址 | 结果 |
-|---|---|
-| `https://<域名>/` | 200 · 测试索引页（列出 6 个页面入口，点击即达） |
-| `https://<域名>/remote_control.html` | 200 · 直接打开该页（无重定向） |
-| `https://<域名>/任意未匹配路径`（含无扩展名形式） | 200 · 回退到测试索引页 |
-
-配置：`html_handling: "none"`（.html 为唯一规范地址，不重定向）
-+ `not_found_handling: "single-page-application"`（未匹配路径与根路径回退到 index.html）。
-
-## 与插件 RN 版的差异记录
-
-1. **中英文件名互换（插件侧疑似线上 bug）**：插件里
-   `RemoteControlPage.js` 装的是**英文**内容，`RemoteControlPage_en.js`
-   装的是**中文**内容，而 MainPage 按 `isChinese ? 'RemoteControlPage' : 'RemoteControlPage_en'`
-   路由——即中文用户目前会被路由到英文远控页。网页版按语言正确对应，
-   不受此问题影响；建议后续插件版本顺带修复。
-2. **深色模式答案文字**：RN 版深色模式下 FAQ 答案文字仍是黑色（opacity 黑），
-   在深色背景上几乎不可见；网页版答案文字已随主题适配（深色下为白色半透明）。
-3. **页内跳转方式**：RN 版 FAQ 里的「小米账号」「打开文件服务」用
-   `scrollTo` 像素值定位，页面改版即失效；网页版改为语义锚点（`#step1`）。
-
-## 后续接入插件（最后一步，改动极小）
-
-插件 MainPage.js 中对应入口的 `navigation.navigate(targetPage)` 替换为：
-
-```js
-const lang = isChinese ? '' : '_en';
-Host.ui.openWebView(`https://<你的域名>/remote_control${ lang }.html`);
-Host.ui.openWebView(`https://<你的域名>/file_manager${ lang }.html`);
-Host.ui.openWebView(`https://<你的域名>/smart_play${ lang }.html`);   // 智能玩法页入口
-```
-
-网页图片与文案全部托管在服务器上，以后更新页面内容只需改本仓库并推送，
-无需再发插件版本。
+排版数值、手势约束、图片规格、部署配置、验证方法与「别改回去」清单等工程细节，
+见 [`AGENTS.md`](AGENTS.md)（面向 AI 协作者与深入排查用）。
