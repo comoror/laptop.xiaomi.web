@@ -50,6 +50,13 @@
 /* 显式给 html 也上背景：body 的背景虽然会传递到画布，但内嵌 WebView 的
    回弹区/安全区偶尔会露出一层，写死更稳。 */
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; touch-action: pan-y; background: var(--bg); }
+/* 隐藏滚动条：--s 按 100vw 计算，而 vw 包含传统滚动条宽度（实测占 26px）。
+   滚动条一旦占位，100vw(784) 就大于可用宽度(758)，页面比可用区域宽 26px，
+   超出的那一截若压着文字就会被 body 的 overflow-x: hidden 裁掉——
+   英文长标题正是这样被切的。隐藏滚动条后 vw == 可用宽度，比例恒定。
+   触屏设备本来就是悬浮滚动条，视觉上无差别。 */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { width: 0; height: 0; }
 body {
   background: var(--bg);
   color: var(--title);
@@ -74,7 +81,11 @@ body {
 
 /* 标题 */
 .page-title   { font-size: calc(64 * var(--s)); font-weight: 400; line-height: calc(84.8 * var(--s)); margin-bottom: calc(108 * var(--s)); }   /* 设计稿 32/42.4 */
-.main-title   { font-size: calc(40 * var(--s)); font-weight: 500; line-height: calc(53 * var(--s)); margin-bottom: calc(44 * var(--s)); color: var(--heading); margin-right: calc(-80 * var(--s)); }   /* 设计稿 20/26.5，文本框宽 380（比内容列 340 宽 40）→ 页面放宽到 760 保证一行 */
+/* 设计稿该层宽 380（内容列 340），即标题允许借用右侧留白。
+   但绝不能超出视口：右侧留白只有 52，所以最多借 52 —— 视口 784 时文本层 732，
+   中文标题（字宽 720）恰好单行、右侧留 12px，和设计稿一致。
+   借多了会被 body 的 overflow-x: hidden 裁掉，英文长标题会直接切在右边缘。 */
+.main-title   { font-size: calc(40 * var(--s)); font-weight: 500; line-height: calc(53 * var(--s)); margin-bottom: calc(44 * var(--s)); color: var(--heading); margin-right: calc(-52 * var(--s)); }   /* 设计稿 20/26.5 */
 .main-title.break { margin-top: calc(176 * var(--s)); }   /* 智能玩法页里的跨板块大间隔 */
 .section-title{ font-size: calc(40 * var(--s)); font-weight: 500; line-height: calc(53 * var(--s)); margin: 0 0 calc(48 * var(--s)); color: var(--heading); }   /* 设计稿 20/26.5 */
 /* 智能玩法页：设备要求之后直接接小节标题，需要设计稿里那段大间距 */
