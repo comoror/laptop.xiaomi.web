@@ -63,13 +63,11 @@ body {
   /* 兜底：万一将来有元素比视口宽（--s 按 100vw 算，而 vw 含滚动条宽度），
      这里把横向溢出裁掉，避免出现横向滚动条。只会吃掉右侧留白。 */
   overflow-x: hidden;
-  /* 只用系统字体，不下载任何字体文件：
-     小米/HyperOS 设备自带 MiSans，命中第一项即与设计稿一致；
-     其它设备依次落到苹方（iOS）、HarmonyOS Sans（华为）、微软雅黑（Windows）、
-     系统默认无衬线（Android 等）。中日韩字体每字都是 1em 宽，
-     所以换字体不影响断行、居中、卡片尺寸，只影响字形长相。 */
-  font-family: "MiSans", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
+  /* 不指定具体字体，用系统默认：system-ui 即操作系统的 UI 字体
+     （小米/HyperOS 上就是 MiSans，Windows 上是 Segoe UI + 微软雅黑，
+     iOS 上是苹方，Android 上是 Roboto/Noto）。不下载任何字体文件。
+     中日韩字体每字都是 1em 宽，换字体不影响断行、居中、卡片尺寸，只影响字形长相。 */
+  font-family: system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   line-height: 1.4;
 }

@@ -119,14 +119,22 @@ html::-webkit-scrollbar { width: 0; height: 0; }
 
 ## 字体
 
-只用系统字体，`font-family` 首位 `"MiSans"`，依次回落 `-apple-system` / `PingFang SC` /
-`HarmonyOS Sans SC` / `Microsoft YaHei` / `sans-serif`。
+**不指定字体，用系统默认**：
+
+```css
+font-family: system-ui, sans-serif;
+```
+
+`system-ui` 是操作系统的 UI 字体：小米/HyperOS 上就是 MiSans（与设计稿一致），
+Windows 上是 Segoe UI + 微软雅黑，iOS 上是苹方，Android 上是 Roboto/Noto。
+页面**不加载任何字体文件**（无 `@font-face`、无 woff、无字体 CDN）。
 
 - 中日韩字体每字 1em 宽，**换字体不影响断行、居中、卡片尺寸、页面高度**，只影响字形。
-- 小米/HyperOS 命中 MiSans；Windows 雅黑只有 400/700，`font-weight:500` 落到 400。
-- 开发机（Windows）装了 MiSans 后，大标题墨迹高度与设计稿差距从 +5.1% 收敛到 +0.8%
-  （验证时 Chrome 需完全重启才重新枚举字体）。
-- 历史方案：`tools/build_font.py` 生成过 MiSans woff2 子集（67KB），为去网络请求已移除，脚本留作备查。
+- Windows 雅黑只有 400/700，`font-weight:500` 会落到 400（标题略轻，不会假加粗）。
+- 历史：曾用 `"MiSans", -apple-system, …` 的显式字体栈，后按需求改为 `system-ui`；
+  更早版本还自托管过 MiSans woff2 子集（`tools/build_font.py`，67KB），为去网络请求已移除。
+- 设计稿是 MiSans 画的，所以在 Windows 上预览时墨迹尺寸会差几个百分点
+  （实测大标题墨迹高 124 vs 设计稿 118），属预期；小米设备上无差异。
 
 ## 图片
 
